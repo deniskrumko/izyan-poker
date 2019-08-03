@@ -108,7 +108,7 @@ def resetdb():
 def isort():
     """Fix imports formatting."""
     print_msg('Running imports fix')
-    local('isort apps core config -y -rc')
+    local('isort apps config -y -rc')
 
 
 @task
@@ -156,3 +156,8 @@ def ps():
 @task
 def runweb():
     local(f'heroku local web -f Procfile.local')
+
+
+@task
+def python(command):
+    local(f'heroku run python {command}')
