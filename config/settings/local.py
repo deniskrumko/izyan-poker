@@ -20,4 +20,4 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 SHELL_PLUS_PRE_IMPORTS = [('{}.factories'.format(app), '*')
                           for app in INSTALLED_APPS]  # noqa
 
-WEBSITE_URL = 'http://127.0.0.1:8000/'
+SHARE_LINK = 'http://127.0.0.1:8000/rooms/{token}/'

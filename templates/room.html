@@ -6,6 +6,7 @@
     {% csrf_token %}
 
     Room name {{ room.name }} <br>
+    Share link <a href="{{ room.share_link }}">{{ room.share_link }}</a> <br>
     Current member {{ member }} <br>
     Round
     {% if poker_round.name %}

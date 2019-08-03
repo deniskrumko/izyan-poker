@@ -12,3 +12,5 @@ DATABASES = {
 }
 
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+SHARE_LINK = 'https://izyan-poker.herokuapp.com/rooms/{token}/'

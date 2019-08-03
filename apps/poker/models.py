@@ -1,5 +1,5 @@
 from secrets import token_urlsafe
-
+from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -56,6 +56,11 @@ class PokerRoom(models.Model):
             PokerRound.objects.filter(room=self).last()
             or PokerRound.objects.create(room=self)
         )
+
+    @property
+    def share_link(self):
+        """Get link to share room."""
+        return settings.SHARE_LINK.format(token=self.token)
 
 
 class PokerRound(models.Model):
