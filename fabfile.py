@@ -118,14 +118,21 @@ def pep8(path='apps core'):
     return local('flake8 --config=.flake8 {}'.format(path))
 
 
-# REQUIREMENTS
+# PIPENV
 # ============================================================================
 
 @task
-def requirements():
+def lock():
+    """Lock requirements."""
+    print_msg('Locking requirements')
+    local('pipenv lock')
+
+
+@task
+def install():
     """Install requirements."""
-    print_msg('Installing requirements')
-    local('pip install -r requirements.txt')
+    print_msg('Installing DEV requirements')
+    local('pipenv install --dev')
 
 
 # HEROKU
