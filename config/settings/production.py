@@ -3,7 +3,6 @@ from decouple import config
 
 from .common import *  # noqa
 
-
 DEBUG = False
 
 SECRET_KEY = config('DJANGO_SECRET_KEY')
