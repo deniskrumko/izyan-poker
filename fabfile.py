@@ -132,5 +132,20 @@ def requirements():
 # ============================================================================
 
 @task
-def hlogs():
+def logs():
     local('heroku logs --source app --tail')
+
+
+@task
+def scale(value=1):
+    local(f'heroku ps:scale web={value}')
+
+
+@task
+def ps():
+    local(f'heroku ps')
+
+
+@task
+def runweb():
+    local(f'heroku local web -f Procfile.local')
