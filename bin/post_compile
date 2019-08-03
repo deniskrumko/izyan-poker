@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# The post_compile hook is run by heroku-buildpack-python
+
+echo "-----> I'm post-compile hook"
+
+# if [ ! -d $TARGET_DIR/gettext ]; then
+#     echo "-----> Installing gettext msgfmt..."
+#
+#     GETTEXT_TARBALL=https://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
+#
+#     # tempdir="$( mktemp -t gettext_XXXX )"
+#     # rm -rf $tempdir
+#     # mkdir -p $tempdir
+#     pushd $BUILD_DIR >/dev/null
+#     rm -f tmp-gettext.tar.gz
+#
+#     curl -s -L -o tmp-gettext.tar.gz "$GETTEXT_TARBALL"
+#     tar -zxvf tmp-gettext.tar.gz > /dev/null
+#     rm tmp-gettext.tar.gz
+#     popd >/dev/null
+#
+#     export PATH=$BUILD_DIR/gettext/bin:$PATH
+#
+#     # ln -s -f ../../vendor/gettext/bin/msgfmt .heroku/python/bin/msgfmt
+#
+#     echo "-----> done installing gettext msgfmt"
+# fi
+
+if [ -f bin/compile_messages ]; then
+    echo "-----> Running compile_messages"
+    chmod +x bin/compile_messages
+    bin/compile_messages
+fi
+
+if [ -f bin/collect_static ]; then
+    echo "-----> Running collect_static"
+    chmod +x bin/collect_static
+    bin/collect_static
+fi
+
+if [ -f bin/run_migrations ]; then
+    echo "-----> Running run_migrations"
+    chmod +x bin/run_migrations
+    bin/run_migrations
+fi
+
+echo "-----> Post-compile done"
