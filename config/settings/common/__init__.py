@@ -4,6 +4,7 @@ from .locales import *  # noqa
 from .logging import *  # noqa
 from .middleware import *  # noqa
 from .paths import *  # noqa
+from .sessions import *  # noqa
 from .static import *  # noqa
 from .templates import *  # noqa
 

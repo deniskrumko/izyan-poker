@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body %}
+<div class="container">
+  <a href="/create/" class="btn">{% trans "Create new room" %}</a>
+
+  {% if available_rooms %}
+    {% for room in available_rooms %}
+    <br>
+      <a href="{% url 'poker:room' room.token %}">{{ room.name }}</a>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

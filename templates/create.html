@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body %}
+<div class="container">
+  <form class="" action="{% url 'poker:create' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="name" value="">
+    <input type="submit" name="" value="{% trans 'Create room' %}" class="btn">
+    <br><br>
+  </form>
+</div>
+{% endblock %}

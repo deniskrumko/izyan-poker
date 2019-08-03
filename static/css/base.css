@@ -1,0 +1,77 @@
+html, body {
+  /* font-family: 'Avenir Next Cyr'; */
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  height: 100%;
+  background: #f6f6f9 !important;
+  color: #333;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+main {
+  /* box-shadow: 0px 2px 5px rgba(0,0,0,0.05); */
+  flex: 1 0 auto;
+  z-index: 1;
+  padding-bottom: 30px;
+}
+footer {
+  padding: 25px 0px 20px 0px;
+  flex-shrink: 0;
+  background: #f0f0f4;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1em;
+  padding-right: 1em;
+  max-width: 900px;
+}
+.social {
+  display: inline-block;
+  padding: 5px 10px 5px 0px;
+}
+.credentials {
+  font-size: 12px;
+  float: right;
+  line-height: 30px;
+}
+.footer-links {
+  text-align: center;
+}
+.footer-links a {
+  font-size: 12px;
+  line-height: 30px;
+  padding: 0px 10px;
+}
+
+/* Buttons */
+
+.btn {
+  padding: 7px 22px;
+  border-radius: 22px;
+  border: none;
+  margin: 5px 5px;
+  font-size: 14px;
+  display: inline-block;
+  transition: background 0.3s ease;
+  text-align: center;
+  background: #e0e0e4;
+  color: #666;
+}
+.btn:hover {
+  background: #d6d6da;
+}
+.btn:active {
+  background: #cdcddd;
+}
+.btn:focus {
+  outline: none;
+}

@@ -1,0 +1,82 @@
+{% load i18n %}
+
+<div class="container">
+
+  <form class="" action="{% url 'poker:room' room.token %}" method="post">
+    {% csrf_token %}
+
+    Room name {{ room.name }} <br>
+    Current member {{ member }} <br>
+    Round
+    {% if poker_round.name %}
+    {{ poker_round.name }}
+    {% else %}
+    {% trans "Без названия" %}
+    {% endif %}
+    <input type="text" name="name">
+    <input type="submit" name="save" value="save" class="btn">
+
+
+    <h1>Votes</h1>
+    {% for member, vote in poker_round.member_votes %}
+      {{ member }}
+      <input type="submit" name="delete_{{ member.id }}" value="delete" class="btn">
+      {% if vote.value is None %}
+      not voted
+      {% else %}
+      {% if poker_round.completed %}
+      {{ vote.value }}
+      {% else %}
+      voted
+      {% endif %}
+      {% endif %}
+      <br>
+    {% endfor %}
+
+    {% if poker_round.completed %}
+    <h1>RESULTS = {{ poker_round.result_score }}</h1>
+    <br>
+    <input type="submit" name="new" value="{% trans 'Create new round' %}" class="btn">
+    {% else %}
+    <input type="submit" name="end" value="{% trans 'End round' %}" class="btn">
+    <br>
+
+      {% if voted %}
+      Wait for other members
+      {% else %}
+      <br>
+      <br>
+      {% for name, value in cards %}
+      <div class="">
+        {{ name }}
+        <input type="submit" name="vote" value="{{ value }}" class="btn">
+      </div>
+      {% endfor %}
+      {% endif %}
+
+    {% endif %}
+
+  </form>
+</div>
+
+{% block js %}
+<script>
+function update_room_status() {
+  var xmlhttp = new XMLHttpRequest();
+  var url = "{% url 'poker:status' room.token %}";
+
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+          if (response["status"] != "{{ room.status }}") {
+            window.location = window.location.href;
+          }
+      }
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}
+
+setInterval(update_room_status, 2000);
+</script>
+{% endblock %}
