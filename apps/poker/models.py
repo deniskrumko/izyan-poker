@@ -28,9 +28,9 @@ class PokerRoom(models.Model):
         auto_now_add=True,
         verbose_name=_('Created'),
     )
-    last_entry = models.DateTimeField(
+    updated = models.DateTimeField(
         auto_now=True,
-        verbose_name=_('Last entry time'),
+        verbose_name=_('Updated'),
     )
 
     def __str__(self):
@@ -39,7 +39,23 @@ class PokerRoom(models.Model):
     class Meta:
         verbose_name = _('Room')
         verbose_name_plural = _('Rooms')
-        ordering = ('-created',)
+        ordering = ('created',)
+
+    @property
+    def status(self):
+        """Get room status.
+
+        Used for auto refreshing pages.
+
+        """
+        return f'last_updated_{self.updated.timestamp()}'
+
+    def get_poker_round(self):
+        """Get or create latest poker round."""
+        return (
+            PokerRound.objects.filter(room=self).last()
+            or PokerRound.objects.create(room=self)
+        )
 
 
 class PokerRound(models.Model):
@@ -53,6 +69,12 @@ class PokerRound(models.Model):
         related_name='rounds',
         verbose_name=_('Room'),
     )
+    name = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name=_('name'),
+    )
     created = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Created'),
@@ -63,12 +85,34 @@ class PokerRound(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f'{self.id} {self.created}'
 
     class Meta:
         verbose_name = _('Round')
         verbose_name_plural = _('Rounds')
-        ordering = ('-created',)
+        ordering = ('created',)
+
+    @property
+    def result_score(self) -> int:
+        """Get result score."""
+        votes = self.votes.values_list('value', flat=True)
+        if not votes or not self.completed:
+            return 0
+
+        return (sum(votes) / len(votes)) if votes else 0
+
+    @property
+    def all_voted(self) -> bool:
+        """Return True if all members have voted."""
+        return all(m.has_voted(self) for m in self.room.members.all())
+
+    @property
+    def member_votes(self) -> list:
+        """Get list of member votes."""
+        return [
+            (member, self.votes.filter(member=member).first())
+            for member in self.room.members.all()
+        ]
 
 
 class PokerMember(models.Model):
@@ -86,7 +130,13 @@ class PokerMember(models.Model):
         max_length=255,
         null=True,
         blank=False,
-        verbose_name=_('name'),
+        verbose_name=_('Name'),
+    )
+    session = models.CharField(
+        max_length=255,
+        null=True,
+        blank=False,
+        verbose_name=_('Session'),
     )
 
     def __str__(self):
@@ -95,11 +145,15 @@ class PokerMember(models.Model):
     class Meta:
         verbose_name = _('Member')
         verbose_name_plural = _('Members')
+        unique_together = ('room', 'session')
         ordering = ('name',)
-        unique_together = ('name', 'room')
+
+    def has_voted(self, poker_round):
+        """Return True if member voted in specified round."""
+        return self.votes.filter(poker_round=poker_round).exists()
 
 
-class PockerMemberVote(models.Model):
+class PokerMemberVote(models.Model):
     """Model for vote of a single poker member."""
 
     poker_round = models.ForeignKey(
@@ -126,7 +180,7 @@ class PockerMemberVote(models.Model):
     )
 
     def __str__(self):
-        return f'{self.member}: {self.value}'
+        return f'Member "{self.member}" voted "{self.value}"'
 
     class Meta:
         verbose_name = _('Vote')
