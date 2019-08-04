@@ -1,4 +1,5 @@
 from secrets import token_urlsafe
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -62,6 +63,11 @@ class PokerRoom(models.Model):
         """Get link to share room."""
         return settings.SHARE_LINK.format(token=self.token)
 
+    @property
+    def truncated_name(self):
+        """Get truncated name of room."""
+        return self.name[:20]
+
 
 class PokerRound(models.Model):
     """Model for vote rounds in room."""
@@ -104,7 +110,21 @@ class PokerRound(models.Model):
         if not votes or not self.completed:
             return 0
 
-        return (sum(votes) / len(votes)) if votes else 0
+        return int(sum(votes) / len(votes)) if votes else 0
+
+    @property
+    def result_tag(self) -> str:
+        """Get result tag."""
+        score = self.result_score
+        if score == 0:
+            return 'ничего не решили'
+
+        for title, value in self.cards:
+            if value == score:
+                return title
+
+            if value > score:
+                return f'скорее всего {title}'
 
     @property
     def all_voted(self) -> bool:
@@ -117,6 +137,27 @@ class PokerRound(models.Model):
         return [
             (member, self.votes.filter(member=member).first())
             for member in self.room.members.all()
+        ]
+
+    @property
+    def cards(self):
+        """Get default playing cards."""
+        return [
+            ('изян', 1),
+            ('изи', 2),
+            ('просто', 4),
+            ('вроде просто', 6),
+            ('норм', 8),
+            ('норм так', 12),
+            ('хз', 16),
+            ('хз как-то', 20),
+            ('как-то сложно', 24),
+            ('сложно', 30),
+            ('очень сложно', 40),
+            ('бля', 48),
+            ('пиздец', 60),
+            ('пиздец какой-то', 80),
+            ('вроде изян', 100),
         ]
 
 

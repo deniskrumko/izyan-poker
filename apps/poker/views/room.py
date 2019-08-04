@@ -23,13 +23,22 @@ class RoomView(BaseView):
         end_voting = request.POST.get('end')
         name = request.POST.get('name')
         save = request.POST.get('save')
+        delete = request.POST.get('delete')
+        revote = request.POST.get('revote')
 
-        for key in request.POST.keys():
-            if key.startswith('delete_'):
-                member_id = key.replace('delete_', '')
-                PokerMember.objects.filter(id=member_id).delete()
+        if delete:
+            # Delete member
+            PokerMember.objects.filter(id=delete).delete()
+
+        if revote:
+            # Re-vote
+            PokerMemberVote.objects.filter(
+                poker_round=self.poker_round,
+                member=self.member,
+            ).delete()
 
         if vote and not self.member.has_voted(self.poker_round):
+            # Count vote
             PokerMemberVote.objects.create(
                 poker_round=self.poker_round,
                 member=self.member,
@@ -37,13 +46,16 @@ class RoomView(BaseView):
             )
 
         if new_voting and self.poker_round.completed:
+            # Start new voting
             self.poker_round = PokerRound.objects.create(room=self.room)
 
         if end_voting and not self.poker_round.completed:
+            # End current voting
             self.poker_round.completed = True
             self.poker_round.save()
 
         if name and save and self.poker_round.name != name:
+            # Change poker round name
             self.poker_round.name = name
             self.poker_round.save()
 
@@ -56,23 +68,7 @@ class RoomView(BaseView):
             'member': self.member,
             'poker_round': self.poker_round,
             'voted': self.member.has_voted(self.poker_round),
-            'cards': [
-                ('изян', 1),
-                ('изи', 2),
-                ('просто', 4),
-                ('вроде просто', 6),
-                ('норм', 8),
-                ('норм так', 12),
-                ('хз', 16),
-                ('хз как-то', 20),
-                ('как-то сложно', 24),
-                ('сложно', 30),
-                ('очень сложно', 40),
-                ('бля', 48),
-                ('пиздец', 60),
-                ('пиздец какой-то', 80),
-                ('вроде изян', 100),
-            ]
+            'cards': self.poker_round.cards,
         }
 
     def dispatch(self, *args, **kwargs):

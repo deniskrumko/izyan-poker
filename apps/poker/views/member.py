@@ -12,16 +12,24 @@ class MemberView(BaseView):
 
     def get(self, request, token):
         self.create_session()
-        context = self.get_context_data()
-        context['token'] = token
+        room = self.get_object_or_404(PokerRoom, token=token)
+        member = PokerMember.objects.filter(
+            room=room,
+            session=self.session_key,
+        ).first()
+        context = {
+            'member': member,
+            'room': room,
+            'token': token,
+        }
         return self.render_to_response(context)
 
     def post(self, request, token):
         name = request.POST.get('name')
         room = self.get_object_or_404(PokerRoom, token=token)
-        PokerMember.objects.get_or_create(
+        PokerMember.objects.update_or_create(
             room=room,
-            name=name,
             session=self.session_key,
+            defaults={'name': name},
         )
         return self.redirect('poker:room', args=(token,))
