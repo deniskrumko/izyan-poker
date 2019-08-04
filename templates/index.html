@@ -1,15 +1,27 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block body %}
 <div class="container">
-  <a href="/create/" class="btn">{% trans "Create new room" %}</a>
-
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+    <a href="/create/" class="btn right sm-hidden">{% trans "Create new room" %}</a>
+  </div>
   {% if available_rooms %}
+    <h1>Доступные комнаты</h1>
     {% for room in available_rooms %}
-    <br>
-      <a href="{% url 'poker:room' room.token %}">{{ room.name }}</a>
+    <a class="poker-card" href="{% url 'poker:room' room.token %}">
+      <p>{{ room.truncated_name }}</p>
+      <div class="poker-card-value-1">{{ room.members.count }}</div>
+      <div class="poker-card-value-2">{{ room.members.count }}</div>
+    </a>
     {% endfor %}
+  {% else %}
+  <p>Создайте новую комнату, чтобы начать.</p>
   {% endif %}
+  <br><br>
+  <a href="/create/" class="btn sm-visible">{% trans "Create new room" %}</a>
 </div>
 {% endblock %}

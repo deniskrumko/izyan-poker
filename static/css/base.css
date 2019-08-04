@@ -1,17 +1,94 @@
 html, body {
-  /* font-family: 'Avenir Next Cyr'; */
+  font-family: 'Roboto Slab', serif;
   -webkit-font-smoothing: antialiased;
   font-weight: 400;
   height: 100%;
-  background: #f6f6f9 !important;
+  background: #f6f6f6 !important;
   color: #333;
+}
+.pure-g [class*=pure-u] {
+  font-family: 'Roboto Slab', serif;
+}
+.wait {
+  max-width: 400px;
+  padding: 20px;
+  filter: brightness(96.5%);
+}
+.result-score {
+  font-size: 100px;
+  font-weight: bold;
+}
+.rename-button {
+  width: 12px;
+  padding: 6px;
+  margin-left: 10px;
+  position: absolute;
+  opacity: 0.3;
+  cursor: pointer;
+}
+.remove-button {
+  background: transparent;
+  border: none;
+}
+.remove-button:focus {
+  outline: none;
+}
+.remove-button img {
+  width: 12px;
+  opacity: 0.3;
+  top: 6px;
+  position: absolute;
+}
+.poker-card {
+  width: 100px;
+  height: 140px;
+  background: #fefefe;
+  border-radius: 10px;
+  border: none;
+  padding: 5px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 5px;
+  text-align: center;
+  box-shadow: 2px 2px 2px #e8e8e8;
+}
+.poker-card p {
+  margin: 20px 0px;
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  max-width: 100px;
+  margin-top: -18px;
+  width: 100%;
+}
+.poker-card-value-1, .poker-card-value-2 {
+  position: absolute;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #aaa;
+}
+.poker-card-value-1 {
+  top: 0px;
+  left: 0px;
+}
+.poker-card-value-2 {
+  bottom: 0px;
+  right: 0px;
+  transform: rotate(180deg);
+}
+.skip {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  color: #aaa;
+  margin: 20px;
 }
 body {
   display: flex;
   flex-direction: column;
 }
 main {
-  /* box-shadow: 0px 2px 5px rgba(0,0,0,0.05); */
   flex: 1 0 auto;
   z-index: 1;
   padding-bottom: 30px;
@@ -22,6 +99,7 @@ footer {
   background: #f0f0f4;
 }
 a {
+  font-family: 'Roboto Slab', serif;
   text-decoration: none;
   cursor: pointer;
   color: #333;
@@ -34,6 +112,26 @@ a {
   padding-right: 1em;
   max-width: 900px;
 }
+.header {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+.header-href {
+  font-size: 28px;
+  font-weight: bold;
+}
+.header-href img {
+  width: 140px;
+}
+.right {
+  float: right;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
 .social {
   display: inline-block;
   padding: 5px 10px 5px 0px;
@@ -42,6 +140,7 @@ a {
   font-size: 12px;
   float: right;
   line-height: 30px;
+  font-family: 'Roboto Slab', serif;
 }
 .footer-links {
   text-align: center;
@@ -58,7 +157,8 @@ a {
   padding: 7px 22px;
   border-radius: 22px;
   border: none;
-  margin: 5px 5px;
+  margin: 5px;
+  line-height: 21px;
   font-size: 14px;
   display: inline-block;
   transition: background 0.3s ease;
@@ -74,4 +174,49 @@ a {
 }
 .btn:focus {
   outline: none;
+}
+
+.text-input {
+  padding: 6px 22px;
+  border: none;
+  margin: 5px;
+  border-radius: 22px;
+  line-height: 22px;
+  transition: box-shadow 0.2s ease;
+}
+.text-input::placeholder {
+  font-size: 14px;
+}
+.text-input:focus {
+  outline: none;
+}
+
+/* Mobile */
+
+.sm-hidden, .md-hidden{
+  display: inline-block !important;
+}
+.sm-visible, .md-visible{
+  display: none !important;
+}
+
+@media only screen and (max-width: 567px) {
+   .sm-hidden{
+     display: none !important;
+   }
+   .sm-visible{
+     display: inline-block !important;
+   }
+   .wait {
+     width: 200px;
+   }
+}
+
+@media only screen and (max-width: 769px) {
+   .md-hidden{
+     display: none !important;
+   }
+   .md-visible{
+     display: inline-block !important;
+   }
 }

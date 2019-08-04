@@ -1,67 +1,123 @@
-{% load i18n %}
+{% extends "base.html" %}
+{% load i18n static %}
 
+{% block body %}
 <div class="container">
-
-  <form class="" action="{% url 'poker:room' room.token %}" method="post">
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+    <a name="button" href="{% url 'poker:member' room.token %}" class="btn right sm-hidden">{{ member }}</a>
+    <a name="button" onclick="copy_share_link()" class="btn right sm-hidden">Поделиться</a>
+  </div>
+  <form class="pure-g" action="{% url 'poker:room' room.token %}" method="post">
     {% csrf_token %}
 
-    Room name {{ room.name }} <br>
-    Share link <a href="{{ room.share_link }}">{{ room.share_link }}</a> <br>
-    Current member {{ member }} <br>
-    Round
-    {% if poker_round.name %}
-    {{ poker_round.name }}
-    {% else %}
-    {% trans "Без названия" %}
-    {% endif %}
-    <input type="text" name="name">
-    <input type="submit" name="save" value="save" class="btn">
+      <div class="pure-u-1-1 pure-u-md-18-24">
+        <h1>Комната «{{ room.name }}»</h1>
 
+        <div class="">
+          {% if poker_round.name %}
+          Тема голосования <b>«{{ poker_round.name }}»</b>
+          {% else %}
+          Без темы
+          {% endif %}
+          <img src="{% static 'images/edit.svg' %}" alt="" class="rename-button" onclick="show_rename()">
+          <div style="display: none; padding-top: 10px;" id="rename">
+            <input type="text" name="name" class="text-input" placeholder="{% if poker_round.name %}{{ poker_round.name }}{% else %}Без темы{% endif %}">
+            <input type="submit" name="save" value="Переименовать" class="btn">
+          </div>
+        </div>
 
-    <h1>Votes</h1>
-    {% for member, vote in poker_round.member_votes %}
-      {{ member }}
-      <input type="submit" name="delete_{{ member.id }}" value="delete" class="btn">
-      {% if vote.value is None %}
-      not voted
-      {% else %}
-      {% if poker_round.completed %}
-      {{ vote.value }}
-      {% else %}
-      voted
-      {% endif %}
-      {% endif %}
-      <br>
-    {% endfor %}
+        {% if poker_round.completed %}
+        <p>Участники решили, что <b>{{ poker_round.result_tag }}.</b></p>
+        <div class="result-score text-center">
+          {{ poker_round.result_score }}
+        </div>
+        <br>
+        {% else %}
+        <br>
+          {% if voted %}
+          <div>Вы проголосовали! Ожидание остальных участников...</div>
+          <img src="{% static 'images/wait.gif' %}" alt="" class="wait">
+          {% else %}
+            {% for name, value in cards %}
+            <button class="poker-card" type="submit" name="vote" value="{{ value }}">
+              {{ name }}
+              <div class="poker-card-value-1">{{ value }}</div>
+              <div class="poker-card-value-2">{{ value }}</div>
+            </button>
+            {% endfor %}
+            <div class="text-center" style="max-width: 565px;">
+              <button type="submit" name="vote" value="0" class="skip">
+                Пропустить
+              </button>
+            </div>
+          {% endif %}
 
-    {% if poker_round.completed %}
-    <h1>RESULTS = {{ poker_round.result_score }}</h1>
-    <br>
-    <input type="submit" name="new" value="{% trans 'Create new round' %}" class="btn">
-    {% else %}
-    <input type="submit" name="end" value="{% trans 'End round' %}" class="btn">
-    <br>
-
-      {% if voted %}
-      Wait for other members
-      {% else %}
-      <br>
-      <br>
-      {% for name, value in cards %}
-      <div class="">
-        {{ name }}
-        <input type="submit" name="vote" value="{{ value }}" class="btn">
+        {% endif %}
       </div>
-      {% endfor %}
-      {% endif %}
+      <div class="pure-u-1-1 pure-u-md-6-24">
+        <h1>Участники</h1>
+        {% for member, vote in poker_round.member_votes %}
+          <div class="pure-g" style="position: relative; padding-bottom: 10px;">
+            <div class="pure-u-4-24" style="text-align: center;">
+              {% if vote.value is None %}
+                —
+                {% else %}
+                  {% if poker_round.completed %}
+                  {{ vote.value }}
+                  {% else %}
+                  +
+                  {% endif %}
+              {% endif %}
+            </div>
+            <div class="pure-u-20-24">
+              <b>{{ member }}</b>
+              <button type="submit" name="delete" value="{{ member.id }}" class="remove-button">
+                <img src="{% static 'images/remove.svg' %}" alt="X">
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+        <div style="padding-top: 10px;" class="text-center">
+          {% if poker_round.completed %}
+          <input type="submit" name="new" value="Новое голосование" class="btn">
+          {% else %}
+          <input type="submit" name="end" value="Закончить голосование" class="btn">
+          {% if voted %}
+          <button type="submit" name="revote" value="1" class="skip text-center">
+            Переголосовать
+          </button>
+          {% endif %}
+          {% endif %}
+          <a name="button" href="{% url 'poker:member' room.token %}" class="btn sm-visible">{{ member }}</a>
+          <a name="button" onclick="copy_share_link()" class="btn sm-visible">Поделиться</a>
+        </div>
 
-    {% endif %}
-
+      </div>
   </form>
 </div>
+{% endblock %}
 
 {% block js %}
 <script>
+function show_rename() {
+  document.getElementById('rename').style.display = "block";
+}
+
+function copy_share_link() {
+  var textArea = document.createElement("textarea");
+  textArea.value = "{{ room.share_link }}";
+  textArea.style.position = "fixed";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
+  alert('Ссылка на комнату скопирована в буфер обмена!');
+}
+
 function update_room_status() {
   var xmlhttp = new XMLHttpRequest();
   var url = "{% url 'poker:status' room.token %}";

@@ -1,13 +1,23 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block body %}
 <div class="container">
-  <form class="" action="{% url 'poker:member' token %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="name" value="">
-    <input type="submit" name="" value="{% trans 'Set name' %}" class="btn primary">
-    <br><br>
-  </form>
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+    <a href="/" class="btn right">Назад</a>
+  </div>
+  <div class="container">
+    <form class="" action="{% url 'poker:member' token %}" method="post">
+      {% csrf_token %}
+      <h1>Добро пожаловать в комнату «{{ room.name }}»</h1>
+      <p>Укажите имя, чтобы начать голосование.</p>
+      <input type="text" name="name" value="{% if member %}{{ member.name }}{% endif %}" class="text-input" style="width: 340px;" placeholder="Ваше имя">
+      <input type="submit" name="" value="Сохранить" class="btn primary">
+      <br><br>
+    </form>
+  </div>
 </div>
 {% endblock %}
