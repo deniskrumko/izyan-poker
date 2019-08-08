@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block body %}
+<div class="container">
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+  </div>
+  <form class="" action="{% url 'poker:settings' room.token %}" method="post">
+    {% csrf_token %}
+    <h1>Настройки комнаты «{{ room.name }}»</h1>
+    <p>Название комнаты</p>
+    <input type="text" name="room_name" value="{% if room %}{{ room.name }}{% endif %}" class="text-input" style="width: 340px;" placeholder="Ваше имя">
+    <p>Имя участника</p>
+    <input type="text" name="member_name" value="{% if member %}{{ member.name }}{% endif %}" class="text-input" style="width: 340px;" placeholder="Ваше имя">
+    <p>Ссылка на комнату</p>
+    <a name="button" onclick="copy_share_link()" class="btn">Скопировать ссылку</a>
+    <br><br>
+    <input type="submit" name="" value="Сохранить" class="btn primary">
+    <a href="{% url 'poker:room' room.token %}" class="btn">Назад</a>
+    <br><br>
+  </form>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+function copy_share_link() {
+  var textArea = document.createElement("textarea");
+  textArea.value = "{{ room.share_link }}";
+  textArea.style.position = "fixed";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
+  alert('Ссылка на комнату скопирована в буфер обмена!');
+}
+</script>
+{% endblock %}

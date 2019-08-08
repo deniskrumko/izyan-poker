@@ -7,8 +7,7 @@
     <a href="{% url 'poker:index' %}" class="header-href">
       <img src="{% static 'images/logo.png' %}" alt="">
     </a>
-    <a name="button" href="{% url 'poker:member' room.token %}" class="btn right sm-hidden">{{ member }}</a>
-    <a name="button" onclick="copy_share_link()" class="btn right sm-hidden">Поделиться</a>
+    <a name="button" href="{% url 'poker:settings' room.token %}" class="btn right sm-hidden">Настройки</a>
   </div>
   <form class="pure-g" action="{% url 'poker:room' room.token %}" method="post">
     {% csrf_token %}
@@ -18,7 +17,11 @@
 
         <div class="">
           {% if poker_round.name %}
-          Тема голосования <b>«{{ poker_round.name }}»</b>
+          Тема голосования <b>
+          {% autoescape off %}
+            {{ poker_round.html_name }}
+          {% endautoescape %}
+          </b>
           {% else %}
           Без темы
           {% endif %}
@@ -104,18 +107,6 @@
 <script>
 function show_rename() {
   document.getElementById('rename').style.display = "block";
-}
-
-function copy_share_link() {
-  var textArea = document.createElement("textarea");
-  textArea.value = "{{ room.share_link }}";
-  textArea.style.position = "fixed";
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textArea);
-  alert('Ссылка на комнату скопирована в буфер обмена!');
 }
 
 function update_room_status() {

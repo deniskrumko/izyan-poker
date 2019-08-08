@@ -5,6 +5,7 @@ from .views import (
     IndexView,
     MemberView,
     RoomView,
+    SettingsView,
     StatusView,
 )
 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('rooms/<token>/', RoomView.as_view(), name='room'),
     path('rooms/<token>/member/', MemberView.as_view(), name='member'),
     path('rooms/<token>/status/', StatusView.as_view(), name='status'),
+    path('rooms/<token>/settings/', SettingsView.as_view(), name='settings'),
 ]

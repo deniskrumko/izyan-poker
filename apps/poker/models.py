@@ -72,6 +72,24 @@ class PokerRoom(models.Model):
 class PokerRound(models.Model):
     """Model for vote rounds in room."""
 
+    CARDS = [
+        ('изян', 1),
+        ('изи', 2),
+        ('просто', 4),
+        ('вроде просто', 6),
+        ('норм', 8),
+        ('норм так', 12),
+        ('хз', 16),
+        ('хз как-то', 20),
+        ('как-то сложно', 24),
+        ('сложно', 30),
+        ('очень сложно', 40),
+        ('бля', 48),
+        ('пиздец', 60),
+        ('пиздец какой-то', 80),
+        ('вроде изян', 100),
+    ]
+
     room = models.ForeignKey(
         PokerRoom,
         null=True,
@@ -142,23 +160,21 @@ class PokerRound(models.Model):
     @property
     def cards(self):
         """Get default playing cards."""
-        return [
-            ('изян', 1),
-            ('изи', 2),
-            ('просто', 4),
-            ('вроде просто', 6),
-            ('норм', 8),
-            ('норм так', 12),
-            ('хз', 16),
-            ('хз как-то', 20),
-            ('как-то сложно', 24),
-            ('сложно', 30),
-            ('очень сложно', 40),
-            ('бля', 48),
-            ('пиздец', 60),
-            ('пиздец какой-то', 80),
-            ('вроде изян', 100),
-        ]
+        return self.CARDS
+
+    @property
+    def html_name(self):
+        """Name of room as HTML tag"""
+        if not self.name:
+            return '-'
+
+        if self.name.startswith('http'):
+            return (
+                f'<a href="{self.name}" target="_blank" class="round-href">'
+                f'{self.name}</a>'
+            )
+
+        return f'«{self.name}»'
 
 
 class PokerMember(models.Model):

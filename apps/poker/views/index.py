@@ -1,4 +1,7 @@
-from ..models import PokerRoom
+from ..models import (
+    PokerRoom,
+    PokerRound,
+)
 from .base import BaseView
 
 
@@ -17,5 +20,6 @@ class IndexView(BaseView):
         return {
             'available_rooms': PokerRoom.objects.filter(
                 members__session=self.session_key
-            )
+            ),
+            'cards': PokerRound.CARDS,
         }

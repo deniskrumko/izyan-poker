@@ -220,3 +220,14 @@ a {
      display: inline-block !important;
    }
 }
+
+.up-arrow {
+  width: 80px;
+  position: absolute;
+  right: -50px;
+  top: -40px;
+}
+
+.round-href {
+  color: #2281e4;
+}
