@@ -52,6 +52,11 @@ html, body {
   margin: 10px 5px;
   text-align: center;
   box-shadow: 2px 2px 2px #e8e8e8;
+  transition: all 0.2s ease;
+}
+.poker-card:hover {
+  transform: scale(1.1);
+  box-shadow: 2px 2px 2px #ccc7c7;
 }
 .poker-card p {
   margin: 20px 0px;
@@ -65,7 +70,7 @@ html, body {
 .poker-card-value-1, .poker-card-value-2 {
   position: absolute;
   padding: 5px 10px;
-  font-size: 12px;
+  font-size: 14px;
   color: #aaa;
 }
 .poker-card-value-1 {
@@ -83,6 +88,10 @@ html, body {
   font-size: 12px;
   color: #aaa;
   margin: 20px;
+  transition: all 0.2s ease;
+}
+.skip:hover {
+  color: #4d4b4b;
 }
 body {
   display: flex;
@@ -230,4 +239,8 @@ a {
 
 .round-href {
   color: #2281e4;
+  transition: all 0.2s ease;
+}
+.round-href:hover {
+  color: #459cf7;
 }
