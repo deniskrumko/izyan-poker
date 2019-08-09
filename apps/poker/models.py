@@ -130,7 +130,7 @@ class PokerRound(models.Model):
 
         votes = [v for v in votes if v != 0]
 
-        return float(sum(votes) / len(votes)) if votes else 0
+        return round(sum(votes) / len(votes), 2) if votes else 0
 
     @property
     def result_tag(self) -> str:
