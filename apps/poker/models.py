@@ -122,13 +122,15 @@ class PokerRound(models.Model):
         ordering = ('created',)
 
     @property
-    def result_score(self) -> int:
+    def result_score(self) -> float:
         """Get result score."""
         votes = self.votes.values_list('value', flat=True)
         if not votes or not self.completed:
             return 0
 
-        return int(sum(votes) / len(votes)) if votes else 0
+        votes = [v for v in votes if v != 0]
+
+        return float(sum(votes) / len(votes)) if votes else 0
 
     @property
     def result_tag(self) -> str:
