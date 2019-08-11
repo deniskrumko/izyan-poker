@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 .DS_Store
-*DS_Store
 # C extensions
 *.so
 Icon
@@ -103,3 +102,4 @@ ENV/
 .mypy_cache/
 
 media/*
+.DS_Store
