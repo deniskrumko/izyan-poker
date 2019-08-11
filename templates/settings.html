@@ -8,19 +8,30 @@
       <img src="{% static 'images/logo.png' %}" alt="">
     </a>
   </div>
-  <form class="" action="{% url 'poker:settings' room.token %}" method="post">
+  <form class="" action="{% url 'poker:settings' room.token %}" method="post" autocomplete="off">
     {% csrf_token %}
     <h1>Настройки комнаты «{{ room.name }}»</h1>
-    <p>Название комнаты</p>
-    <input type="text" name="room_name" value="{% if room %}{{ room.name }}{% endif %}" class="text-input" style="width: 340px;" placeholder="Ваше имя">
-    <p>Имя участника</p>
-    <input type="text" name="member_name" value="{% if member %}{{ member.name }}{% endif %}" class="text-input" style="width: 340px;" placeholder="Ваше имя">
-    <p>Ссылка на комнату</p>
-    <a name="button" onclick="copy_share_link()" class="btn">Скопировать ссылку</a>
+    <div class="pure-g">
+      <div class="pure-u-1-1 pure-u-md-1-2">
+        <p>Название комнаты</p>
+        <input type="text" name="room_name" value="{% if room %}{{ room.name }}{% endif %}" class="text-input wide" placeholder="Ваше имя">
+        <p>Результат голосования</p>
+        <select class="select-input" name="use_time">
+          <option value="1" {% if room.use_time %}selected{% endif %}>Часы и минуты</option>
+          <option value="0" {% if not room.use_time %}selected{% endif %}>Число</option>
+        </select>
+      </div>
+      <div class="pure-u-1-1 pure-u-md-1-2">
+        <p>Ваше имя в комнате</p>
+        <input type="text" name="member_name" value="{% if member %}{{ member.name }}{% endif %}" class="text-input wide" placeholder="Ваше имя">
+        <p>Ссылка на комнату</p>
+        <a name="button" onclick="copy_share_link()" class="btn">Скопировать ссылку</a>
+      </div>
+    </div>
     <br><br>
-    <input type="submit" name="" value="Сохранить" class="btn primary">
-    <a href="{% url 'poker:room' room.token %}" class="btn">Назад</a>
-    <br><br>
+    <input type="submit" name="_save" value="Сохранить" class="btn">
+    <a href="{% url 'poker:room' token=room.token %}" class="btn">Назад</a>
+    <input type="submit" name="_exit" value="Выйти из комнаты" class="btn danger" style="margin-left: 30px;">
   </form>
 </div>
 {% endblock %}

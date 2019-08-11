@@ -9,7 +9,7 @@
     </a>
     <a name="button" href="{% url 'poker:settings' room.token %}" class="btn right sm-hidden">Настройки</a>
   </div>
-  <form class="pure-g" action="{% url 'poker:room' room.token %}" method="post">
+  <form class="pure-g" action="{% url 'poker:room' room.token %}" method="post" autocomplete="off">
     {% csrf_token %}
 
       <div class="pure-u-1-1 pure-u-md-18-24">
@@ -17,7 +17,7 @@
 
         <div class="">
           {% if poker_round.name %}
-          Тема голосования <b>
+          <b>
           {% autoescape off %}
             {{ poker_round.html_name }}
           {% endautoescape %}
@@ -27,17 +27,29 @@
           {% endif %}
           <img src="{% static 'images/edit.svg' %}" alt="" class="rename-button" onclick="show_rename()">
           <div style="display: none; padding-top: 10px;" id="rename">
-            <input type="text" name="name" class="text-input" placeholder="{% if poker_round.name %}{{ poker_round.name }}{% else %}Без темы{% endif %}">
-            <input type="submit" name="save" value="Переименовать" class="btn">
+            <input type="text" name="name" class="text-input s-wide" placeholder="Введите тему голосования" {% if poker_round.name %}value="{{ poker_round.name }}"{% endif %}>
+            <input type="submit" name="save" value="Сохранить" class="btn">
           </div>
         </div>
 
         {% if poker_round.completed %}
-        <p>Участники решили, что <b>{{ poker_round.result_tag }}.</b></p>
+        <p>Участники решили, что <b>{{ poker_round.opinion }}.</b></p>
         <div class="result-score text-center">
-          {{ poker_round.result_score }}
+          {{ poker_round.score }}
         </div>
         <br>
+        {% for vote in poker_round.member_votes_as_cards %}
+        <button class="poker-card">
+          {{ vote.card }}
+          <div class="poker-card-value-1">{{ vote.value }}</div>
+          <div class="poker-card-value-2">{{ vote.value }}</div>
+          {% if vote.count > 1 %}
+          <div class="poker-card-count">
+            x{{ vote.count }}
+          </div>
+          {% endif %}
+        </button>
+        {% endfor %}
         {% else %}
         <br>
           {% if voted %}
@@ -62,7 +74,7 @@
       </div>
       <div class="pure-u-1-1 pure-u-md-6-24">
         <h1>Участники</h1>
-        {% for member, vote in poker_round.member_votes %}
+        {% for m, vote in poker_round.member_votes %}
           <div class="pure-g" style="position: relative; padding-bottom: 10px;">
             <div class="pure-u-4-24" style="text-align: center;">
               {% if vote.value is None %}
@@ -75,11 +87,15 @@
                   {% endif %}
               {% endif %}
             </div>
-            <div class="pure-u-20-24">
-              <b>{{ member }}</b>
-              <button type="submit" name="delete" value="{{ member.id }}" class="remove-button">
-                <img src="{% static 'images/remove.svg' %}" alt="X">
+            <div class="pure-u-20-24" style="position: relative;">
+              <b>{{ m }}</b>
+              {% if m == member %}
+                <img src="{% static 'images/user.svg' %}" alt="_()_" class="user-img" title="Это Вы">
+              {% else %}
+              <button type="submit" name="delete" value="{{ m.id }}" class="remove-button">
+                <img src="{% static 'images/remove.svg' %}" alt="X" title="Удалить?">
               </button>
+              {% endif %}
             </div>
           </div>
         {% endfor %}
@@ -94,8 +110,7 @@
           </button>
           {% endif %}
           {% endif %}
-          <a name="button" href="{% url 'poker:member' room.token %}" class="btn sm-visible">{{ member }}</a>
-          <a name="button" onclick="copy_share_link()" class="btn sm-visible">Поделиться</a>
+          <a name="button" href="{% url 'poker:settings' room.token %}" class="btn sm-visible">Настройки</a>
         </div>
 
       </div>

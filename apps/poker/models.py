@@ -1,7 +1,9 @@
+import typing as t
 from secrets import token_urlsafe
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -32,6 +34,10 @@ class PokerRoom(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
         verbose_name=_('Updated'),
+    )
+    use_time = models.BooleanField(
+        default=True,
+        verbose_name=_('Use time'),
     )
 
     def __str__(self):
@@ -89,6 +95,7 @@ class PokerRound(models.Model):
         ('пиздец какой-то', 80),
         ('вроде изян', 100),
     ]
+    CARDS_DICT = {card[1]: card[0] for card in CARDS}
 
     room = models.ForeignKey(
         PokerRoom,
@@ -122,29 +129,38 @@ class PokerRound(models.Model):
         ordering = ('created',)
 
     @property
-    def result_score(self) -> float:
-        """Get result score."""
+    def _score(self) -> float:
+        """Get result score as number."""
         votes = self.votes.values_list('value', flat=True)
         if not votes or not self.completed:
-            return 0
+            return 0.0
 
         votes = [v for v in votes if v != 0]
-
-        return round(sum(votes) / len(votes), 2) if votes else 0
+        return (sum(votes) / len(votes)) if votes else 0.0
 
     @property
-    def result_tag(self) -> str:
-        """Get result tag."""
-        score = self.result_score
+    def score(self) -> t.Union[str, float]:
+        """Get result score as text or number."""
+        result_score = self._score
+
+        if not self.room.use_time:
+            return round(result_score, 2)
+
+        hours = int(result_score // 1)
+        minutes = int(60 * (result_score % 1))
+
+        return f'{hours} ч.' + (f' {minutes} м.' if minutes else '')
+
+    @property
+    def opinion(self) -> str:
+        """Get result tag (or member opinion) as text."""
+        score = self._score
         if score == 0:
             return 'ничего не решили'
 
         for title, value in self.cards:
-            if value == score:
+            if value >= score:
                 return title
-
-            if value > score:
-                return f'скорее всего {title}'
 
     @property
     def all_voted(self) -> bool:
@@ -157,6 +173,21 @@ class PokerRound(models.Model):
         return [
             (member, self.votes.filter(member=member).first())
             for member in self.room.members.all()
+        ]
+
+    @property
+    def member_votes_as_cards(self) -> list:
+        """Get list of member votes (ordered from max to min)."""
+        votes = self.votes.values('value').annotate(
+            count=Count('id')
+        ).order_by('-value')
+        return [
+            {
+                'value': obj['value'],
+                'count': obj['count'],
+                'card': self.CARDS_DICT[obj['value']]
+            }
+            for obj in votes
         ]
 
     @property
@@ -232,7 +263,7 @@ class PokerMemberVote(models.Model):
         PokerMember,
         null=True,
         blank=False,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='votes',
         verbose_name=_('Member'),
     )

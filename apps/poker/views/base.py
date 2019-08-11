@@ -23,7 +23,7 @@ class BaseView(TemplateView):
         if not self.request.session.session_key:
             self.request.session.save()
 
-    def redirect(self, url, args):
+    def redirect(self, url, args=None):
         """Redirect to provided url."""
         return HttpResponseRedirect(reverse(url, args=args))
 

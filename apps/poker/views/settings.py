@@ -10,17 +10,24 @@ class SettingsView(BaseView):
     template_name = 'settings.html'
 
     def post(self, request, token):
+        """Handle POST request."""
+        # Exit room
+        if '_exit' in request.POST:
+            self.member.delete()
+            return self.redirect('poker:index')
+
         room_name = request.POST.get('room_name')
         member_name = request.POST.get('member_name')
-        if room_name:
-            self.room.name = room_name
-            self.room.save()
+        use_time = request.POST.get('use_time')
 
-        if member_name:
-            self.member.name = member_name
-            self.member.save()
+        self.room.name = room_name
+        self.room.use_time = bool(int(use_time))
+        self.member.name = member_name
 
-        return self.redirect('poker:settings', args=(token,))
+        self.room.save()
+        self.member.save()
+
+        return self.redirect('poker:room', args=(token,))
 
     def get_context_data(self, *args, **kwargs):
         """Get context data."""

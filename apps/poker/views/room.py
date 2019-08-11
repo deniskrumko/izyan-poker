@@ -12,12 +12,14 @@ class RoomView(BaseView):
     template_name = 'room.html'
 
     def get(self, request, token):
+        """Handle GET request."""
         if not self.member:
             return self.redirect('poker:member', args=(token,))
 
         return super().get(request, token)
 
     def post(self, request, token):
+        """Handle POST request."""
         vote = request.POST.get('vote')
         new_voting = request.POST.get('new')
         end_voting = request.POST.get('end')

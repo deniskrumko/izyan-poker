@@ -17,7 +17,7 @@ class PokerRoundInline(admin.TabularInline):
     fields = (
         'completed',
         'name',
-        'result_score',
+        'score',
         'all_voted',
     )
     show_change_link = True
