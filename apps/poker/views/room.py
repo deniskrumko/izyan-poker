@@ -1,10 +1,10 @@
 from ..models import (
     PokerMember,
+    PokerMemberRecentRoom,
     PokerMemberVote,
     PokerRoom,
     PokerRound,
 )
-from copy import copy
 from .base import BaseView
 
 
@@ -33,6 +33,11 @@ class RoomView(BaseView):
         if delete:
             # Delete member
             PokerMember.objects.filter(id=delete).delete()
+            if self.session_key:
+                PokerMemberRecentRoom.objects.get_or_create(
+                    room=self.room,
+                    session=self.session_key,
+                )
 
         if revote:
             # Re-vote
@@ -86,11 +91,4 @@ class RoomView(BaseView):
             room=self.room,
             session=self.session_key,
         ).first() if self.session_key else None
-
-        self.request.session.setdefault('recent_rooms', [token])
-        if token not in self.request.session['recent_rooms']:
-            rooms = copy(self.request.session['recent_rooms'])
-            rooms.append(token)
-            self.request.session['recent_rooms'] = rooms
-
         return super().dispatch(*args, **kwargs)

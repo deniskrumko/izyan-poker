@@ -248,6 +248,34 @@ class PokerMember(models.Model):
         return self.votes.filter(poker_round=poker_round).exists()
 
 
+class PokerMemberRecentRoom(models.Model):
+    """Model for recent rooms of user session."""
+
+    room = models.ForeignKey(
+        PokerRoom,
+        null=True,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='recent_members',
+        verbose_name=_('Room'),
+    )
+    session = models.CharField(
+        max_length=255,
+        null=True,
+        blank=False,
+        verbose_name=_('Session'),
+    )
+
+    def __str__(self):
+        return self.room.name
+
+    class Meta:
+        verbose_name = _('Recent room')
+        verbose_name_plural = _('Recent rooms')
+        unique_together = ('room', 'session')
+        ordering = ('room__name',)
+
+
 class PokerMemberVote(models.Model):
     """Model for vote of a single poker member."""
 

@@ -81,6 +81,16 @@ class PokerMemberAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(models.PokerMemberRecentRoom)
+class PokerMemberRecentRoomAdmin(admin.ModelAdmin):
+    """Admin class for ``PokerMemberRecentRoom`` model."""
+
+    list_display = (
+        'room',
+        'session',
+    )
+
+
 @admin.register(models.PokerRound)
 class PokerRoundAdmin(admin.ModelAdmin):
     """Admin class for ``PokerRound`` model."""

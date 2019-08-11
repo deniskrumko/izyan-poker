@@ -1,5 +1,6 @@
 from ..models import (
     PokerMember,
+    PokerMemberRecentRoom,
     PokerRoom,
 )
 from .base import BaseView
@@ -14,6 +15,11 @@ class SettingsView(BaseView):
         # Exit room
         if '_exit' in request.POST:
             self.member.delete()
+            if self.session_key:
+                PokerMemberRecentRoom.objects.get_or_create(
+                    room=self.room,
+                    session=self.session_key,
+                )
             return self.redirect('poker:index')
 
         room_name = request.POST.get('room_name')

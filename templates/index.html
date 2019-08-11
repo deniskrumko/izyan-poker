@@ -23,11 +23,11 @@
 
     {% if recent_rooms %}
     <h1>Недавние комнаты</h1>
-    {% for room in recent_rooms %}
-    <a class="poker-card" href="{% url 'poker:room' room.token %}">
-      <p>{{ room.truncated_name }}</p>
-      <div class="poker-card-value-1">{{ room.members.count }}</div>
-      <div class="poker-card-value-2">{{ room.members.count }}</div>
+    {% for recent in recent_rooms %}
+    <a class="poker-card" href="{% url 'poker:room' recent.room.token %}">
+      <p>{{ recent.room.truncated_name }}</p>
+      <div class="poker-card-value-1">{{ recent.room.members.count }}</div>
+      <div class="poker-card-value-2">{{ recent.room.members.count }}</div>
     </a>
     {% endfor %}
     {% endif %}

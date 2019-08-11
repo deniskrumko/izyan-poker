@@ -1,5 +1,6 @@
 from ..models import (
     PokerMember,
+    PokerMemberRecentRoom,
     PokerRoom,
 )
 from .base import BaseView
@@ -32,4 +33,8 @@ class MemberView(BaseView):
             session=self.session_key,
             defaults={'name': name},
         )
+        PokerMemberRecentRoom.objects.filter(
+            room=room,
+            session=self.session_key,
+        ).delete()
         return self.redirect('poker:room', args=(token,))
