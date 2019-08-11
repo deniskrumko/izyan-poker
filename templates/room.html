@@ -13,9 +13,11 @@
     {% csrf_token %}
 
       <div class="pure-u-1-1 pure-u-md-18-24">
+        {# Room name #}
         <h1>Комната «{{ room.name }}»</h1>
 
-        <div class="">
+        {# Round theme #}
+        <div>
           {% if poker_round.name %}
           <b>
           {% autoescape off %}
@@ -33,14 +35,16 @@
         </div>
 
         {% if poker_round.completed %}
+        {# 1. Vote completed #}
         <p>Участники решили, что <b>{{ poker_round.opinion }}.</b></p>
         <div class="result-score text-center">
           {{ poker_round.score }}
         </div>
         <br>
+        {# Result votes cards #}
         {% for vote in poker_round.member_votes_as_cards %}
-        <button class="poker-card">
-          {{ vote.card }}
+        <div class="poker-card" href="#">
+          <p>{{ vote.card }}</p>
           <div class="poker-card-value-1">{{ vote.value }}</div>
           <div class="poker-card-value-2">{{ vote.value }}</div>
           {% if vote.count > 1 %}
@@ -48,25 +52,31 @@
             x{{ vote.count }}
           </div>
           {% endif %}
-        </button>
+        </div>
         {% endfor %}
         {% else %}
+        {# 2. Vote NOT completed #}
         <br>
           {% if voted %}
+          {# 2.1 You voted #}
           <div>Вы проголосовали! Ожидание остальных участников...</div>
           <img src="{% static 'images/wait.gif' %}" alt="" class="wait">
           {% else %}
+          {# 2.2. You NOT voted yet #}
             {% for name, value in cards %}
-            <button class="poker-card" type="submit" name="vote" value="{{ value }}">
+            <button class="poker-card" type="submit" name="vote" value="{{ value }}" id="card-{{ value }}">
               {{ name }}
               <div class="poker-card-value-1">{{ value }}</div>
               <div class="poker-card-value-2">{{ value }}</div>
             </button>
             {% endfor %}
-            <div class="text-center" style="max-width: 565px;">
+            <div class="text-center sm-hidden" style="width: 100%; max-width: 565px;">
               <button type="submit" name="vote" value="0" class="skip">
                 Пропустить
               </button>
+              <span class="skip pointer" onclick="alert('Секретное голосование нужно, если вы транслируете свой экран для всех. Тогда вам важно, что никто не увидит, как вы проголосовали.\n\nВо время голосования введите нужное число на клавиатуре (например 20) и нажмите Enter.')">
+                Секретное голосование
+              </span>
             </div>
           {% endif %}
 
@@ -104,11 +114,15 @@
           <input type="submit" name="new" value="Новое голосование" class="btn">
           {% else %}
           <input type="submit" name="end" value="Закончить голосование" class="btn">
-          {% if voted %}
-          <button type="submit" name="revote" value="1" class="skip text-center">
-            Переголосовать
-          </button>
-          {% endif %}
+            {% if voted %}
+            <button type="submit" name="revote" value="1" class="skip">
+              Изменить решение
+            </button>
+            {% else %}
+            <button type="submit" name="vote" value="0" class="btn sm-visible">
+              Пропустить
+            </button>
+            {% endif %}
           {% endif %}
           <a name="button" href="{% url 'poker:settings' room.token %}" class="btn sm-visible">Настройки</a>
         </div>
@@ -120,8 +134,26 @@
 
 {% block js %}
 <script>
+
+var secret_vote = '';
+
 function show_rename() {
   document.getElementById('rename').style.display = "block";
+}
+
+document.addEventListener('keypress', secretVote);
+function secretVote(e) {
+  if (e.key == 'Enter') {
+      var el = document.getElementById('card-' + secret_vote);
+      if (el != null) {
+        el.click();
+      } else {
+        alert('Введено неверное число. Выбирайте из диапазона карточек.');
+        secret_vote = '';
+      }
+  } else {
+      secret_vote += e.key;
+  }
 }
 
 function update_room_status() {

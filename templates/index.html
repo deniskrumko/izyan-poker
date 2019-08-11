@@ -9,7 +9,8 @@
     </a>
     <a href="/create/" class="btn right sm-hidden">{% trans "Create new room" %}</a>
   </div>
-  {% if available_rooms %}
+  {% if available_rooms or recent_rooms %}
+    {% if available_rooms %}
     <h1>Доступные комнаты</h1>
     {% for room in available_rooms %}
     <a class="poker-card" href="{% url 'poker:room' room.token %}">
@@ -18,11 +19,23 @@
       <div class="poker-card-value-2">{{ room.members.count }}</div>
     </a>
     {% endfor %}
+    {% endif %}
+
+    {% if recent_rooms %}
+    <h1>Недавние комнаты</h1>
+    {% for room in recent_rooms %}
+    <a class="poker-card" href="{% url 'poker:room' room.token %}">
+      <p>{{ room.truncated_name }}</p>
+      <div class="poker-card-value-1">{{ room.members.count }}</div>
+      <div class="poker-card-value-2">{{ room.members.count }}</div>
+    </a>
+    {% endfor %}
+    {% endif %}
   {% else %}
   <div class="pure-g">
     <div class="pure-u-1-1 pure-u-md-18-24">
       <h2>Добро пожаловать в Planning Poker</h2>
-      <p>Вы можете оценивать свои задачи этими замечательными карточками:</p>
+      <p>Вы можете оценивать свои задачи этими замечательными<a href="https://tjournal.ru/tweets/107760-universalnaya-tablica-ocenki-zadach" target="_blank" class="round-href"> карточками</a>:</p>
       {% for name, value in cards %}
       <button class="poker-card" value="{{ value }}">
         {{ name }}

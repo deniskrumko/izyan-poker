@@ -4,10 +4,12 @@ from ..models import (
     PokerRoom,
     PokerRound,
 )
+from copy import copy
 from .base import BaseView
 
 
 class RoomView(BaseView):
+    """View for single poker room."""
 
     template_name = 'room.html'
 
@@ -39,7 +41,9 @@ class RoomView(BaseView):
                 member=self.member,
             ).delete()
 
-        if vote and not self.member.has_voted(self.poker_round):
+        if vote and self.member and not self.member.has_voted(
+            self.poker_round
+        ):
             # Count vote
             PokerMemberVote.objects.create(
                 poker_round=self.poker_round,
@@ -75,10 +79,18 @@ class RoomView(BaseView):
 
     def dispatch(self, *args, **kwargs):
         """Dispatch request."""
-        self.room = self.get_object_or_404(PokerRoom, token=kwargs['token'])
+        token = kwargs['token']
+        self.room = self.get_object_or_404(PokerRoom, token=token)
         self.poker_round = self.room.get_poker_round()
         self.member = PokerMember.objects.filter(
             room=self.room,
             session=self.session_key,
         ).first() if self.session_key else None
+
+        self.request.session.setdefault('recent_rooms', [token])
+        if token not in self.request.session['recent_rooms']:
+            rooms = copy(self.request.session['recent_rooms'])
+            rooms.append(token)
+            self.request.session['recent_rooms'] = rooms
+
         return super().dispatch(*args, **kwargs)

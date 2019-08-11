@@ -185,7 +185,7 @@ class PokerRound(models.Model):
             {
                 'value': obj['value'],
                 'count': obj['count'],
-                'card': self.CARDS_DICT[obj['value']]
+                'card': self.CARDS_DICT.get(obj['value'], '—')
             }
             for obj in votes
         ]

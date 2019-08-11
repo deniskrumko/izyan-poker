@@ -23,6 +23,9 @@ html, body {
 .pure-g [class*=pure-u] {
   font-family: 'Roboto Slab', serif;
 }
+.pointer {
+  cursor: pointer;
+}
 .wait {
   max-width: 400px;
   padding: 20px;
@@ -69,14 +72,21 @@ html, body {
   vertical-align: middle;
   margin: 10px 5px;
   text-align: center;
-  box-shadow: 2px 2px 2px #e8e8e8;
+  box-shadow: 2px 2px 2px #e5e5e5;
   transition: all 0.2s ease;
   font-size: 16px;
   word-break: break-word;
 }
 .poker-card:hover {
-  transform: scale(1.1);
-  box-shadow: 2px 2px 2px #ccc7c7;
+  transform: translateY(-6px);
+  box-shadow: 2px 8px 4px #e6e6e6;
+}
+.poker-card:active {
+  transform: translateY(-3px);
+  box-shadow: 2px 5px 4px #e6e6e6;
+}
+.poker-card:focus {
+  outline: none;
 }
 .poker-card p {
   margin: 20px 0px;

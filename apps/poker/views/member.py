@@ -18,7 +18,7 @@ class MemberView(BaseView):
             session=self.session_key,
         ).first()
         context = {
-            'member': member,
+            'member_name': member.name if member else '',
             'room': room,
             'token': token,
         }
