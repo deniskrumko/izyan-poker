@@ -147,8 +147,10 @@ class PokerRound(models.Model):
             return round(result_score, 2)
 
         hours = int(result_score // 1)
-        minutes = int(60 * (result_score % 1))
-
+        minutes = round(60 * (result_score % 1))
+        if minutes == 60:
+            minutes = 0
+            hours += 1
         return f'{hours} ч.' + (f' {minutes} м.' if minutes else '')
 
     @property
