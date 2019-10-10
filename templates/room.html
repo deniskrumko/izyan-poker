@@ -2,6 +2,13 @@
 {% load i18n static %}
 
 {% block body %}
+
+{% if last_one %}
+<div class="last-one">
+  <b>Только вы не проголосовали</b>
+</div>
+{% endif %}
+
 <div class="container">
   <div class="header">
     <a href="{% url 'poker:index' %}" class="header-href">

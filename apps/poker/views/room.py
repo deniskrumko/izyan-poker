@@ -80,6 +80,7 @@ class RoomView(BaseView):
             'poker_round': self.poker_round,
             'voted': self.member.has_voted(self.poker_round),
             'cards': self.poker_round.cards,
+            'last_one': self.member.is_last_one(self.poker_round),
         }
 
     def dispatch(self, *args, **kwargs):

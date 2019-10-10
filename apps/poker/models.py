@@ -249,6 +249,12 @@ class PokerMember(models.Model):
         """Return True if member voted in specified round."""
         return self.votes.filter(poker_round=poker_round).exists()
 
+    def is_last_one(self, poker_round):
+        qs = poker_round.room.members.exclude(
+            id__in=poker_round.votes.values('member_id')
+        )
+        return qs.count() == 1 and qs.first() == self
+
 
 class PokerMemberRecentRoom(models.Model):
     """Model for recent rooms of user session."""
