@@ -136,8 +136,10 @@
 <script>
 
 var secret_vote = '';
+var need_to_check_status = true;
 
 function show_rename() {
+  need_to_check_status = false;
   document.getElementById('rename').style.display = "block";
 }
 
@@ -157,12 +159,19 @@ function secretVote(e) {
 }
 
 function update_room_status() {
+  if (!need_to_check_status) {
+    console.log('Room status check is disabled');
+    return;
+  }
+
   var xmlhttp = new XMLHttpRequest();
   var url = "{% url 'poker:status' room.token %}";
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           var response = JSON.parse(this.responseText);
+          console.log("Room status: " + response["status"]);
+
           if (response["status"] != "{{ room.status }}") {
             window.location = window.location.href;
           }
@@ -172,6 +181,6 @@ function update_room_status() {
   xmlhttp.send();
 }
 
-setInterval(update_room_status, 2000);
+setInterval(update_room_status, 4000);
 </script>
 {% endblock %}
