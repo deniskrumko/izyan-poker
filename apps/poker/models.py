@@ -250,9 +250,12 @@ class PokerMember(models.Model):
         return self.votes.filter(poker_round=poker_round).exists()
 
     def is_last_one(self, poker_round):
-        qs = poker_round.room.members.exclude(
-            id__in=poker_round.votes.values('member_id')
-        )
+        """Returns True if member is the only one who did not voted."""
+        if poker_round.room.members.count() < 3:
+            return False
+
+        who_voted = poker_round.votes.values('member_id')
+        qs = poker_round.room.members.exclude(id__in=who_voted)
         return qs.count() == 1 and qs.first() == self
 
 
