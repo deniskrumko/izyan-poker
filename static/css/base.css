@@ -310,15 +310,18 @@ a {
      float: inherit;
    }
    .poker-card {
-     width: 58px;
-     height: 88px;
+     width: 62px;
+     height: 90px;
      border-radius: 6px;
      padding: 5px;
-     margin: 5px 5px;
-     font-size: 8px;
+     margin: 5px 3px;
+     font-size: 11px;
    }
    .result-score {
      font-size: 50px;
+   }
+   h1 {
+     font-size: 20px !important;
    }
 }
 

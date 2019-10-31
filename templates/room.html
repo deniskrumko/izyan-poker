@@ -21,7 +21,7 @@
 
       <div class="pure-u-1-1 pure-u-md-18-24">
         {# Room name #}
-        <h1>Комната «{{ room.name }}»</h1>
+        <h1 class="room-name">Комната «{{ room.name }}»</h1>
 
         {# Round theme #}
         <div>
@@ -47,10 +47,9 @@
         <div class="result-score text-center">
           {{ poker_round.score }}
         </div>
-        <br>
         {# Result votes cards #}
         {% for vote in poker_round.member_votes_as_cards %}
-        <div class="poker-card" href="#">
+        <div class="poker-card md-hidden" href="#">
           <p>{{ vote.card }}</p>
           <div class="poker-card-value-1">{{ vote.value }}</div>
           <div class="poker-card-value-2">{{ vote.value }}</div>
