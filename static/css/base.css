@@ -309,6 +309,17 @@ a {
    .right {
      float: inherit;
    }
+   .poker-card {
+     width: 58px;
+     height: 88px;
+     border-radius: 6px;
+     padding: 5px;
+     margin: 5px 5px;
+     font-size: 8px;
+   }
+   .result-score {
+     font-size: 50px;
+   }
 }
 
 .up-arrow {
