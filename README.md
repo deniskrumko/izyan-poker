@@ -18,4 +18,4 @@
 
 ## Thanks
 
-* [wayou](https://github.com/wayou) for [t-rex-runner](http://wayou.github.io/t-rex-runner/) game
+* [wayou](https://github.com/wayou) for [t-rex-runner](https://wayou.github.io/t-rex-runner/) game
