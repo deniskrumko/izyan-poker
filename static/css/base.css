@@ -363,3 +363,10 @@ a {
   padding: 10px;
   z-index: 1000;
 }
+
+#trex {
+  width: 100%;
+  height: 160px;
+  transition: all 0.5s ease-in;
+  border: none;
+}

@@ -15,3 +15,7 @@
 * Django 2.2.4
 * Some JS code and [Pure.css](https://purecss.io/)
 * Hosted by [Heroku](https://www.heroku.com/)
+
+## Thanks
+
+* [wayou](https://github.com/wayou) for [t-rex-runner](http://wayou.github.io/t-rex-runner/) game

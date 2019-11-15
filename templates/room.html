@@ -66,7 +66,11 @@
           {% if voted %}
           {# 2.1 You voted #}
           <div>Вы проголосовали! Ожидание остальных участников...</div>
-          <img src="{% static 'images/wait.gif' %}" alt="" class="wait">
+          <br>
+          <button type="button" id="game-btn" class="btn sm-hidden" onclick="open_game()">Надоело ждать?</button>
+          <br>
+          <img src="{% static 'images/wait.gif' %}" id="wait-gif" class="wait">
+          <iframe src="http://wayou.github.io/t-rex-runner/" id="trex" class="sm-hidden" scrolling="no" style="opacity: 0;"></iframe>
           {% else %}
           {# 2.2. You NOT voted yet #}
             {% for name, value in cards %}
@@ -120,6 +124,7 @@
           <input type="submit" name="new" value="Новое голосование" class="btn">
           {% else %}
           <input type="submit" name="end" value="Закончить голосование" class="btn">
+          <button type="button" id="refresh" class="btn danger" style="display: none;"onClick="window.location.reload();">Обновить страницу</button>
             {% if voted %}
             <button type="submit" name="revote" value="1" class="skip">
               Изменить решение
@@ -149,6 +154,14 @@ function show_rename() {
   document.getElementById('rename').style.display = "block";
 }
 
+function open_game() {
+  need_to_check_status = false;
+  document.getElementById("trex").style.opacity = "1";
+  document.getElementById("trex").focus();
+  document.getElementById('wait-gif').remove();
+  document.getElementById('game-btn').remove();
+}
+
 document.addEventListener('keypress', secretVote);
 function secretVote(e) {
   if (e.key == 'Enter') {
@@ -165,11 +178,6 @@ function secretVote(e) {
 }
 
 function update_room_status() {
-  if (!need_to_check_status) {
-    console.log('Room status check is disabled');
-    return;
-  }
-
   var xmlhttp = new XMLHttpRequest();
   var url = "{% url 'poker:status' room.token %}";
 
@@ -179,7 +187,12 @@ function update_room_status() {
           console.log("Room status: " + response["status"]);
 
           if (response["status"] != "{{ room.status }}") {
-            window.location = window.location.href;
+            if (need_to_check_status) {
+                window.location = window.location.href;
+            } else {
+                document.getElementById('refresh').style.display = "inline-block";
+            }
+
           }
       }
   };
