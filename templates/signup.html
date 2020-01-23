@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block body %}
+
+<div class="container">
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+  </div>
+  {% include "messages.html" %}
+  <form action="/signup/?{{ request.META.QUERY_STRING }}" method="post" autocomplete="off">
+    {% csrf_token %}
+    <div style="text-align: center;">
+      <h1>Давайте знакомиться</h1>
+      <p><input class="text-input" type="text" name="email" placeholder="Email" maxlength="50" required></p>
+      <p><input class="text-input" type="password" name="password" placeholder="Пароль" required></p>
+      <p><input class="text-input" type="password" name="password2" placeholder="Пароль (еще раз)" required></p>
+      <p>И если не затруднит</p>
+      <p><input class="text-input" type="text" name="firstname" placeholder="Имя" maxlength="20"></p>
+      <p><input class="text-input" type="text" name="lastname" placeholder="Фамилия" maxlength="20"></p>
+      <input type="submit" value="Создать" class="btn success">
+      <a href="{% url 'users:login' %}" class="btn">Назад</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

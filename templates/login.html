@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block body %}
+
+<div class="container">
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+  </div>
+  {% include "messages.html" %}
+  <form action="/login/?{{ request.META.QUERY_STRING }}" method="post">
+    {% csrf_token %}
+    <div style="text-align: center;">
+      <h1>А Вы, собственно, кто?</h1>
+      <p><input class="text-input" type="text" name="email" placeholder="Email"></p>
+      <p><input class="text-input" type="password" name="password" placeholder="Пароль"></p>
+      <input type="submit" value="Войти" class="btn success">
+      <a href="{% url 'poker:index' %}" class="btn">Назад</a>
+    </div>
+  </form>
+  <div style="text-align: center;">
+    <br>
+    <a href="{% url 'users:signup' %}" class="round-href">Создать аккаунт?</a>
+  </div>
+</div>
+
+{% endblock %}

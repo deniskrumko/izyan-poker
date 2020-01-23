@@ -14,7 +14,8 @@
     <a href="{% url 'poker:index' %}" class="header-href">
       <img src="{% static 'images/logo.png' %}" alt="">
     </a>
-    <a name="button" href="{% url 'poker:settings' room.token %}" class="btn right sm-hidden">Настройки</a>
+    <a href="/user/" class="btn success right sm-hidden">{{ request.user }}</a>
+    <a name="button" href="{% url 'poker:settings' room.token %}" class="btn right sm-hidden">Настройки комнаты</a>
   </div>
   <form class="pure-g" action="{% url 'poker:room' room.token %}" method="post" autocomplete="off">
     {% csrf_token %}
@@ -67,8 +68,6 @@
           {# 2.1 You voted #}
           <div>Вы проголосовали! Ожидание остальных участников...</div>
           <br>
-          <button type="button" id="game-btn" class="btn sm-hidden" onclick="open_game()">Надоело ждать?</button>
-          <br>
           <img src="{% static 'images/wait.gif' %}" id="wait-gif" class="wait">
           <iframe src="https://wayou.github.io/t-rex-runner/" id="trex" class="sm-hidden" scrolling="no" style="opacity: 0;"></iframe>
           {% else %}
@@ -108,7 +107,7 @@
               {% endif %}
             </div>
             <div class="pure-u-20-24" style="position: relative;">
-              <b>{{ m }}</b>
+              <b title="{{ m.user }}" class="member-name">{{ m }}</b>
               {% if m == member %}
                 <img src="{% static 'images/user.svg' %}" alt="_()_" class="user-img" title="Это Вы">
               {% else %}
@@ -129,18 +128,18 @@
             <button type="submit" name="revote" value="1" class="skip">
               Изменить решение
             </button>
+            <div onclick="open_game()" class="skip">
+              Поиграть 🦖
+            </div>
             {% else %}
             <button type="submit" name="vote" value="0" class="btn sm-visible">
               Пропустить
             </button>
             {% endif %}
           <br><br>
-          <a href="https://habr.com/ru/post/480204/" target="_blank" style="padding-top: 30px;">
-            Freedom to <br>
-            <img src="{% static 'images/nginx.png' %}" width=80>
-          </a>
           {% endif %}
-          <a name="button" href="{% url 'poker:settings' room.token %}" class="btn sm-visible">Настройки</a>
+          <a name="button" href="{% url 'poker:settings' room.token %}" class="btn sm-visible">Настройки комнаты</a>
+          <a href="/user/" class="btn right sm-visible">{{ request.user }}</a>
         </div>
 
       </div>

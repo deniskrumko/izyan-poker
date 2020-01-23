@@ -7,10 +7,13 @@
     <a href="{% url 'poker:index' %}" class="header-href">
       <img src="{% static 'images/logo.png' %}" alt="">
     </a>
-    <a href="/create/" class="btn right sm-hidden">{% trans "Create new room" %}</a>
+    {% if request.user.is_authenticated %}
+    <a href="/user/" class="btn success right sm-hidden">{{ request.user }}</a>
+    {% else %}
+    <a href="/login/" class="btn right sm-hidden">{% trans "Login" %}</a>
+    {% endif %}
   </div>
-  {% if available_rooms or recent_rooms %}
-    {% if available_rooms %}
+  {% if request.user.is_authenticated %}
     <h1>Доступные комнаты</h1>
     {% for room in available_rooms %}
     <a class="poker-card" href="{% url 'poker:room' room.token %}">
@@ -19,18 +22,11 @@
       <div class="poker-card-value-2">{{ room.members.count }}</div>
     </a>
     {% endfor %}
-    {% endif %}
-
-    {% if recent_rooms %}
-    <h1>Недавние комнаты</h1>
-    {% for recent in recent_rooms %}
-    <a class="poker-card" href="{% url 'poker:room' recent.room.token %}">
-      <p>{{ recent.room.truncated_name }}</p>
-      <div class="poker-card-value-1">{{ recent.room.members.count }}</div>
-      <div class="poker-card-value-2">{{ recent.room.members.count }}</div>
+    <a class="poker-card-new" href="{% url 'poker:create'%}">
+      <p>Создать комнату</p>
+      <div class="poker-card-value-1">+</div>
+      <div class="poker-card-value-2">+</div>
     </a>
-    {% endfor %}
-    {% endif %}
   {% else %}
   <div class="pure-g">
     <div class="pure-u-1-1 pure-u-md-18-24">
@@ -46,13 +42,17 @@
     </div>
     <div class="pure-u-1-1 pure-u-md-6-24 md-hidden">
       <p style="position: relative; padding-top: 30px; text-align: center;">
-        <b>Для начала голосования нужно создать комнату</b>
+        <b>Для начала нужно авторизоваться</b>
         <img src="{% static 'images/up.gif' %}" alt="" class="up-arrow">
       </p>
     </div>
   </div>
   {% endif %}
   <br><br>
-  <a href="/create/" class="btn sm-visible">{% trans "Create new room" %}</a>
+  {% if request.user.is_authenticated %}
+  <a href="/user/" class="btn success right sm-visible">{{ request.user }}</a>
+  {% else %}
+  <a href="/login/" class="btn right sm-visible">{% trans "Login" %}</a>
+  {% endif %}
 </div>
 {% endblock %}

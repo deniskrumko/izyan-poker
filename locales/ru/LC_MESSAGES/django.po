@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-04 13:07+0300\n"
+"POT-Creation-Date: 2020-01-23 16:06+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
 msgid "Main"
 msgstr ""
 
@@ -40,6 +41,9 @@ msgstr "Создан"
 msgid "Updated"
 msgstr "Обновлен"
 
+msgid "Use time"
+msgstr "Использовать время"
+
 msgid "Room"
 msgstr "Комната"
 
@@ -58,8 +62,8 @@ msgstr "Раунд"
 msgid "Rounds"
 msgstr "Раунды"
 
-msgid "Session"
-msgstr "Сессия"
+msgid "User"
+msgstr "Пользователь"
 
 msgid "Member"
 msgstr "Участник"
@@ -91,8 +95,20 @@ msgstr "Пользователи"
 msgid "email address"
 msgstr "Email"
 
-msgid "User"
-msgstr "Пользователь"
+msgid "User not found or password is incorrect"
+msgstr "Пользователь не найден или пароль указан неверно"
+
+msgid "Incorrect email format"
+msgstr "Неверный формат email"
+
+msgid "User with such email already exists"
+msgstr "Пользователь с таким email уже существует"
+
+msgid "Passwords do not match"
+msgstr "Пароли не совпадают между собой"
+
+msgid "Changes successfully saved"
+msgstr "Изменения успешно сохранены"
 
 msgid "Izyan Poker"
 msgstr "Изян-powered покер"
@@ -106,14 +122,5 @@ msgstr "Введите название комнаты"
 msgid "Create"
 msgstr "Создать"
 
-msgid "Set name"
-msgstr "Укажите имя"
-
-msgid "Без названия"
-msgstr "Без названия"
-
-msgid "Create new round"
-msgstr "Создать новый раунд"
-
-msgid "End round"
-msgstr "Закончить раунд"
+msgid "Login"
+msgstr "Войти"

@@ -77,9 +77,29 @@ html, body {
   font-size: 16px;
   word-break: break-word;
 }
+.poker-card-new {
+  width: 100px;
+  height: 140px;
+  border-radius: 10px;
+  border: none;
+  padding: 5px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 5px;
+  text-align: center;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  word-break: break-word;
+  background: #f6f6f6;
+  box-shadow: inset 0px 0px 6px 0px #e5e5e5;
+}
 .poker-card:hover {
   transform: translateY(-6px);
   box-shadow: 2px 8px 4px #e6e6e6;
+}
+.poker-card-new:hover {
+  box-shadow: inset 0px 0px 6px 0px #aaa;
 }
 .poker-card:active {
   transform: translateY(-3px);
@@ -88,7 +108,7 @@ html, body {
 .poker-card:focus {
   outline: none;
 }
-.poker-card p {
+.poker-card p, .poker-card-new p {
   margin: 20px 0px;
   position: absolute;
   top: 50%;
@@ -129,8 +149,9 @@ html, body {
   border: none;
   font-size: 12px;
   color: #aaa;
-  margin: 20px;
+  margin-top: 5px;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 .skip:hover {
   color: #4d4b4b;
@@ -173,6 +194,10 @@ a {
 }
 .header-href img {
   width: 140px;
+  transition: all 0.3s ease;
+}
+.header-href img:hover {
+  transform: scale(1.1);
 }
 .text-right {
   text-align: right;
@@ -229,6 +254,13 @@ a {
 }
 .danger:hover {
   background: #dd453e;
+}
+.success {
+  background: #1CB8A0;
+  color: #fff;
+}
+.success:hover {
+  background: #179f8a;
 }
 .text-input.wide {
   width: 100%;
@@ -309,7 +341,7 @@ a {
    .right {
      float: inherit;
    }
-   .poker-card {
+   .poker-card, .poker-card-new {
      width: 62px;
      height: 90px;
      border-radius: 6px;
@@ -369,4 +401,30 @@ a {
   height: 160px;
   transition: all 0.5s ease-in;
   border: none;
+}
+
+.member-name {
+  cursor: default;
+  transition: all 0.3s ease;
+}
+.member-name:hover {
+  color: #1CB8A0;
+}
+
+
+.message {
+  background: #CCE6FF;
+  color: #004085;
+  width: 100%;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+.message.msg-error {
+  background: #F8D7DB;
+  color: #721C24;
+}
+.message.msg-success {
+  background: #c0f6ee;
+  color: #138f7c;
 }

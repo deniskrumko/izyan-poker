@@ -12,8 +12,8 @@
   <form class="" action="{% url 'poker:member' room.token %}" method="post">
     {% csrf_token %}
     <h1>Добро пожаловать в комнату «{{ room.name }}»</h1>
-    <p>Укажите имя, чтобы начать голосование.</p>
-    <input type="text" name="name" value="{% if member_name %}{{ member_name }}{% endif %}" class="text-input" style="width: 340px;" placeholder="Ваше имя">
+    <p>Укажите имя для данной комнаты. Но не слишком длинное, а то верстка поедет.</p>
+    <input type="text" name="name" value="{{ request.user }}" class="text-input" style="width: 340px;" placeholder="Ваше имя" maxlength="20">
     <input type="submit" name="" value="Сохранить" class="btn primary">
     <br><br>
   </form>
