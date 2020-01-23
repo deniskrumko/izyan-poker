@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-
+from django.contrib import messages
 from . import models
 
 
@@ -65,11 +65,30 @@ class PokerRoomAdmin(admin.ModelAdmin):
         PokerMemberInline,
         PokerRoundInline,
     )
+    actions = (
+        'remove_empty_rounds',
+    )
 
     def members(self, obj):
+        """Get list of members."""
         return ', '.join(member.name for member in obj.members.all())
 
     members.short_description = _('Members')
+
+    def remove_empty_rounds(self, request, queryset):
+        """Action to remove empty rounds."""
+        result = 0
+        for room in queryset:
+            for poker_round in room.rounds.filter(completed=True):
+                if not poker_round._score:
+                    result += 1
+                    poker_round.delete()
+
+        return messages.add_message(request, messages.INFO, _(
+            'Removed rounds count is {}'
+        ).format(result))
+
+    remove_empty_rounds.short_description = _('Remove empty rounds')
 
 
 @admin.register(models.PokerMember)

@@ -77,7 +77,7 @@ class PokerRoom(models.Model):
     @property
     def history(self):
         """Get rounds history."""
-        return self.rounds.order_by('-created')
+        return self.rounds.filter(completed=True).order_by('-created')
 
 
 class PokerRound(models.Model):
