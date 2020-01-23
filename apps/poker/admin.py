@@ -7,7 +7,7 @@ from . import models
 class PokerMemberInline(admin.TabularInline):
     """Inline class for ``PokerMember`` model."""
 
-    readonly_fields = ('session',)
+    readonly_fields = ('user',)
     model = models.PokerMember
     extra = 0
 
@@ -78,16 +78,6 @@ class PokerMemberAdmin(admin.ModelAdmin):
 
     search_fields = (
         'name',
-    )
-
-
-@admin.register(models.PokerMemberRecentRoom)
-class PokerMemberRecentRoomAdmin(admin.ModelAdmin):
-    """Admin class for ``PokerMemberRecentRoom`` model."""
-
-    list_display = (
-        'room',
-        'session',
     )
 
 

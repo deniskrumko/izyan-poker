@@ -229,11 +229,13 @@ class PokerMember(models.Model):
         blank=False,
         verbose_name=_('Name'),
     )
-    session = models.CharField(
-        max_length=255,
+    user = models.ForeignKey(
+        'users.User',
         null=True,
         blank=False,
-        verbose_name=_('Session'),
+        on_delete=models.SET_NULL,
+        related_name='members',
+        verbose_name=_('User'),
     )
 
     def __str__(self):
@@ -242,7 +244,7 @@ class PokerMember(models.Model):
     class Meta:
         verbose_name = _('Member')
         verbose_name_plural = _('Members')
-        unique_together = ('room', 'session')
+        unique_together = ('room', 'user')
         ordering = ('name',)
 
     def has_voted(self, poker_round):
@@ -251,40 +253,12 @@ class PokerMember(models.Model):
 
     def is_last_one(self, poker_round):
         """Returns True if member is the only one who did not voted."""
-        if poker_round.room.members.count() < 3:
+        if poker_round.completed or poker_round.room.members.count() < 3:
             return False
 
         who_voted = poker_round.votes.values('member_id')
         qs = poker_round.room.members.exclude(id__in=who_voted)
         return qs.count() == 1 and qs.first() == self
-
-
-class PokerMemberRecentRoom(models.Model):
-    """Model for recent rooms of user session."""
-
-    room = models.ForeignKey(
-        PokerRoom,
-        null=True,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='recent_members',
-        verbose_name=_('Room'),
-    )
-    session = models.CharField(
-        max_length=255,
-        null=True,
-        blank=False,
-        verbose_name=_('Session'),
-    )
-
-    def __str__(self):
-        return self.room.name
-
-    class Meta:
-        verbose_name = _('Recent room')
-        verbose_name_plural = _('Recent rooms')
-        unique_together = ('room', 'session')
-        ordering = ('room__name',)
 
 
 class PokerMemberVote(models.Model):
