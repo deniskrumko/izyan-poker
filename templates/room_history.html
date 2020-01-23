@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block body %}
+<div class="container">
+  <div class="header">
+    <a href="{% url 'poker:index' %}" class="header-href">
+      <img src="{% static 'images/logo.png' %}" alt="">
+    </a>
+    <a href="/user/" class="btn success right sm-hidden">{{ request.user }}</a>
+  </div>
+  <h1>История голосований комнаты «<a href="{% url 'poker:room' room.token %}" class="round-href">{{ room.name }}</a>»</h1>
+  <div class="pure-g">
+    {% for round in room.history %}
+    <div class="pure-u-1-1 pure-u-md-1-2">
+      <h3 style="margin-bottom: 5px;">
+      {% if round.name %}
+        {% autoescape off %}
+          {{ round.html_name }}
+        {% endautoescape %}
+      {% else %}
+      Без темы
+      {% endif %}
+      </h3>
+      <div style="font-size: 10px; color: #777;">
+        {{ round.created }}
+      </div>
+      <div class="">
+        {{ round.score }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

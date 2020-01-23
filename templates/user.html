@@ -27,6 +27,10 @@
         <input type="submit" name="_save" value="Сохранить изменения" class="btn success">
         <br>
         <a href="{% url 'users:logout' %}" class="btn danger">Выйти из аккаунта</a>
+        {% if request.user.is_superuser %}
+        <br><br>
+        <a href="{% url 'admin:index' %}" class="btn">Администрирование сайта</a>
+        {% endif %}
       </div>
     </div>
     <br><br>

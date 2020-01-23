@@ -15,7 +15,6 @@
       <img src="{% static 'images/logo.png' %}" alt="">
     </a>
     <a href="/user/" class="btn success right sm-hidden">{{ request.user }}</a>
-    <a name="button" href="{% url 'poker:settings' room.token %}" class="btn right sm-hidden">Настройки комнаты</a>
   </div>
   <form class="pure-g" action="{% url 'poker:room' room.token %}" method="post" autocomplete="off">
     {% csrf_token %}
@@ -120,15 +119,15 @@
         {% endfor %}
         <div style="padding-top: 10px;" class="text-center">
           {% if poker_round.completed %}
-          <input type="submit" name="new" value="Новое голосование" class="btn">
+          <input type="submit" name="new" value="Новое голосование" class="btn success">
           {% else %}
-          <input type="submit" name="end" value="Закончить голосование" class="btn">
-          <button type="button" id="refresh" class="btn danger" style="display: none;"onClick="window.location.reload();">Обновить страницу</button>
+          <input type="submit" name="end" value="Закончить досрочно" class="btn danger">
+          <button type="button" id="refresh" class="btn warning" style="display: none;"onClick="window.location.reload();">Обновить страницу</button>
             {% if voted %}
-            <button type="submit" name="revote" value="1" class="skip">
+            <button type="submit" name="revote" value="1" class="btn">
               Изменить решение
             </button>
-            <div onclick="open_game()" class="skip">
+            <div onclick="open_game()" id="game-btn" class="btn sm-hidden">
               Поиграть 🦖
             </div>
             {% else %}
@@ -136,10 +135,9 @@
               Пропустить
             </button>
             {% endif %}
-          <br><br>
           {% endif %}
-          <a name="button" href="{% url 'poker:settings' room.token %}" class="btn sm-visible">Настройки комнаты</a>
-          <a href="/user/" class="btn right sm-visible">{{ request.user }}</a>
+          <a name="button" href="{% url 'poker:settings' room.token %}" class="btn">Настройки комнаты</a>
+          <a href="/user/" class="btn success right sm-visible">{{ request.user }}</a>
         </div>
 
       </div>

@@ -238,6 +238,7 @@ a {
   text-align: center;
   background: #e0e0e4;
   color: #666;
+  cursor: pointer;
 }
 .btn:hover {
   background: #d6d6da;
@@ -254,6 +255,13 @@ a {
 }
 .danger:hover {
   background: #dd453e;
+}
+.warning {
+  background: #f2aa4a;
+  color: #fff;
+}
+.warning:hover {
+  background: #db973c;
 }
 .success {
   background: #1CB8A0;

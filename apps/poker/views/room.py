@@ -94,3 +94,23 @@ class RoomView(LoginRequiredMixin, BaseView):
             user=self.user,
         ).first()
         return super().dispatch(*args, **kwargs)
+
+
+class RoomHistoryView(RoomView):
+    """View for poker room history."""
+
+    template_name = 'room_history.html'
+
+    def get(self, request, token):
+        """Handle GET request."""
+        if not self.member:
+            return self.redirect('poker:member', args=(token,))
+
+        return super().get(request, token)
+
+    def get_context_data(self):
+        """Get context data."""
+        return {
+            'room': self.room,
+            'member': self.member,
+        }

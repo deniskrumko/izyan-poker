@@ -74,6 +74,11 @@ class PokerRoom(models.Model):
         """Get truncated name of room."""
         return self.name[:20]
 
+    @property
+    def history(self):
+        """Get rounds history."""
+        return self.rounds.order_by('-created')
+
 
 class PokerRound(models.Model):
     """Model for vote rounds in room."""
