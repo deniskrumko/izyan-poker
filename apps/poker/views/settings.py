@@ -1,12 +1,15 @@
+from core.views import (
+    BaseView,
+    LoginRequiredMixin,
+)
+
 from ..models import (
     PokerMember,
-    PokerMemberRecentRoom,
     PokerRoom,
 )
-from .base import BaseView
 
 
-class SettingsView(BaseView):
+class SettingsView(LoginRequiredMixin, BaseView):
 
     template_name = 'settings.html'
 
@@ -15,11 +18,6 @@ class SettingsView(BaseView):
         # Exit room
         if '_exit' in request.POST:
             self.member.delete()
-            if self.session_key:
-                PokerMemberRecentRoom.objects.get_or_create(
-                    room=self.room,
-                    session=self.session_key,
-                )
             return self.redirect('poker:index')
 
         room_name = request.POST.get('room_name')
@@ -44,10 +42,13 @@ class SettingsView(BaseView):
 
     def dispatch(self, *args, **kwargs):
         """Dispatch request."""
+        self.user = (
+            self.request.user if self.request.user.is_authenticated else None
+        )
         self.room = self.get_object_or_404(PokerRoom, token=kwargs['token'])
         self.poker_round = self.room.get_poker_round()
         self.member = PokerMember.objects.filter(
             room=self.room,
-            session=self.session_key,
-        ).first() if self.session_key else None
+            user=self.user,
+        ).first()
         return super().dispatch(*args, **kwargs)

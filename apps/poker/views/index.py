@@ -1,9 +1,9 @@
+from core.views import BaseView
+
 from ..models import (
-    PokerMemberRecentRoom,
     PokerRoom,
     PokerRound,
 )
-from .base import BaseView
 
 
 class IndexView(BaseView):
@@ -11,19 +11,11 @@ class IndexView(BaseView):
 
     template_name = 'index.html'
 
-    def get(self, request):
-        """Get index view."""
-        self.create_session()
-        return super().get(request)
-
     def get_context_data(self):
         """Get context data."""
         return {
             'available_rooms': PokerRoom.objects.filter(
-                members__session=self.session_key
-            ),
-            'recent_rooms': PokerMemberRecentRoom.objects.filter(
-                session=self.session_key
+                members__user=self.user
             ),
             'cards': PokerRound.CARDS,
         }

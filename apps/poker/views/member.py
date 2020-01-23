@@ -1,22 +1,24 @@
+from core.views import (
+    BaseView,
+    LoginRequiredMixin,
+)
+
 from ..models import (
     PokerMember,
-    PokerMemberRecentRoom,
     PokerRoom,
 )
-from .base import BaseView
 
 
-class MemberView(BaseView):
+class MemberView(LoginRequiredMixin, BaseView):
     """View for editing member data."""
 
     template_name = 'member.html'
 
     def get(self, request, token):
-        self.create_session()
         room = self.get_object_or_404(PokerRoom, token=token)
         member = PokerMember.objects.filter(
             room=room,
-            session=self.session_key,
+            user=self.user,
         ).first()
         context = {
             'member_name': member.name if member else '',
@@ -30,11 +32,7 @@ class MemberView(BaseView):
         room = self.get_object_or_404(PokerRoom, token=token)
         PokerMember.objects.update_or_create(
             room=room,
-            session=self.session_key,
+            user=self.user,
             defaults={'name': name},
         )
-        PokerMemberRecentRoom.objects.filter(
-            room=room,
-            session=self.session_key,
-        ).delete()
         return self.redirect('poker:room', args=(token,))

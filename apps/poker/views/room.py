@@ -1,14 +1,17 @@
+from core.views import (
+    BaseView,
+    LoginRequiredMixin,
+)
+
 from ..models import (
     PokerMember,
-    PokerMemberRecentRoom,
     PokerMemberVote,
     PokerRoom,
     PokerRound,
 )
-from .base import BaseView
 
 
-class RoomView(BaseView):
+class RoomView(LoginRequiredMixin, BaseView):
     """View for single poker room."""
 
     template_name = 'room.html'
@@ -33,11 +36,6 @@ class RoomView(BaseView):
         if delete:
             # Delete member
             PokerMember.objects.filter(id=delete).delete()
-            if self.session_key:
-                PokerMemberRecentRoom.objects.get_or_create(
-                    room=self.room,
-                    session=self.session_key,
-                )
 
         if revote:
             # Re-vote
@@ -86,10 +84,13 @@ class RoomView(BaseView):
     def dispatch(self, *args, **kwargs):
         """Dispatch request."""
         token = kwargs['token']
+        self.user = (
+            self.request.user if self.request.user.is_authenticated else None
+        )
         self.room = self.get_object_or_404(PokerRoom, token=token)
         self.poker_round = self.room.get_poker_round()
         self.member = PokerMember.objects.filter(
             room=self.room,
-            session=self.session_key,
-        ).first() if self.session_key else None
+            user=self.user,
+        ).first()
         return super().dispatch(*args, **kwargs)
