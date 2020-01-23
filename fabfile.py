@@ -41,13 +41,14 @@ def shell():
 # ============================================================================
 
 @task
-def push():
+def push(force=False):
     """Push changes to all servers."""
+    force = ' --force' if force else ''
     print_msg('1. Pushing to origin')
-    local('git push origin master --tags')
+    local(f'git push origin master --tags{force}')
 
     print_msg('2. Pushing to Heroku')
-    local('git push heroku master')
+    local(f'git push heroku master{force}')
 
 
 # LOCALES
