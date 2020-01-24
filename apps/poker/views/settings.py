@@ -13,11 +13,19 @@ class SettingsView(LoginRequiredMixin, BaseView):
 
     template_name = 'settings.html'
 
+    def get(self, request, token):
+        """Handle GET request."""
+        if not self.member:
+            return self.redirect('poker:room', args=(token,))
+
+        return super().get(request, token)
+
     def post(self, request, token):
         """Handle POST request."""
         # Exit room
         if '_exit' in request.POST:
-            self.member.delete()
+            self.member.is_active = False
+            self.member.save()
             return self.redirect('poker:index')
 
         room_name = request.POST.get('room_name')
@@ -50,5 +58,6 @@ class SettingsView(LoginRequiredMixin, BaseView):
         self.member = PokerMember.objects.filter(
             room=self.room,
             user=self.user,
+            is_active=True,
         ).first()
         return super().dispatch(*args, **kwargs)

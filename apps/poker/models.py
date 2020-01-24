@@ -79,6 +79,16 @@ class PokerRoom(models.Model):
         """Get rounds history."""
         return self.rounds.filter(completed=True).order_by('-created')
 
+    @property
+    def active_members(self):
+        """Get all active members."""
+        return self.members.filter(is_active=True)
+
+    @property
+    def members_count(self):
+        """Get members count."""
+        return self.active_members.count()
+
 
 class PokerRound(models.Model):
     """Model for vote rounds in room."""
@@ -172,14 +182,14 @@ class PokerRound(models.Model):
     @property
     def all_voted(self) -> bool:
         """Return True if all members have voted."""
-        return all(m.has_voted(self) for m in self.room.members.all())
+        return all(m.has_voted(self) for m in self.room.active_members)
 
     @property
     def member_votes(self) -> list:
         """Get list of member votes."""
         return [
             (member, self.votes.filter(member=member).first())
-            for member in self.room.members.all()
+            for member in self.room.active_members
         ]
 
     @property
@@ -234,6 +244,10 @@ class PokerMember(models.Model):
         blank=False,
         verbose_name=_('Name'),
     )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_('Is active'),
+    )
     user = models.ForeignKey(
         'users.User',
         null=True,
@@ -254,15 +268,17 @@ class PokerMember(models.Model):
 
     def has_voted(self, poker_round):
         """Return True if member voted in specified round."""
-        return self.votes.filter(poker_round=poker_round).exists()
+        return poker_round.votes.filter(member=self).exists()
 
     def is_last_one(self, poker_round):
         """Returns True if member is the only one who did not voted."""
-        if poker_round.completed or poker_round.room.members.count() < 3:
+        members = poker_round.room.active_members
+
+        if poker_round.completed or members.count() == 1:
             return False
 
         who_voted = poker_round.votes.values('member_id')
-        qs = poker_round.room.members.exclude(id__in=who_voted)
+        qs = members.exclude(id__in=who_voted)
         return qs.count() == 1 and qs.first() == self
 
 

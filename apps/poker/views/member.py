@@ -19,6 +19,7 @@ class MemberView(LoginRequiredMixin, BaseView):
         member = PokerMember.objects.filter(
             room=room,
             user=self.user,
+            is_active=True,
         ).first()
         context = {
             'member_name': member.name if member else '',
@@ -33,6 +34,9 @@ class MemberView(LoginRequiredMixin, BaseView):
         PokerMember.objects.update_or_create(
             room=room,
             user=self.user,
-            defaults={'name': name},
+            defaults={
+                'name': name,
+                'is_active': True,
+            },
         )
         return self.redirect('poker:room', args=(token,))

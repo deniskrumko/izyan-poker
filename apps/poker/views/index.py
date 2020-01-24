@@ -13,9 +13,10 @@ class IndexView(BaseView):
 
     def get_context_data(self):
         """Get context data."""
+        room_ids = self.user.members.filter(
+            is_active=True
+        ).values_list('room_id', flat=True)
         return {
-            'available_rooms': PokerRoom.objects.filter(
-                members__user=self.user
-            ),
+            'available_rooms': PokerRoom.objects.filter(id__in=room_ids),
             'cards': PokerRound.CARDS,
         }

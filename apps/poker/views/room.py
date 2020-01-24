@@ -34,8 +34,8 @@ class RoomView(LoginRequiredMixin, BaseView):
         revote = request.POST.get('revote')
 
         if delete:
-            # Delete member
-            PokerMember.objects.filter(id=delete).delete()
+            # Deactivate member
+            PokerMember.objects.filter(id=delete).update(is_active=False)
 
         if revote:
             # Re-vote
@@ -92,6 +92,7 @@ class RoomView(LoginRequiredMixin, BaseView):
         self.member = PokerMember.objects.filter(
             room=self.room,
             user=self.user,
+            is_active=True,
         ).first()
         return super().dispatch(*args, **kwargs)
 

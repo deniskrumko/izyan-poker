@@ -98,6 +98,11 @@ class PokerMemberAdmin(admin.ModelAdmin):
     search_fields = (
         'name',
     )
+    list_display = (
+        'name',
+        'user',
+        'is_active',
+    )
 
 
 @admin.register(models.PokerRound)
