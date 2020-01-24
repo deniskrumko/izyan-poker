@@ -18,8 +18,8 @@
     {% for room in available_rooms %}
     <a class="poker-card" href="{% url 'poker:room' room.token %}">
       <p>{{ room.truncated_name }}</p>
-      <div class="poker-card-value-1">{{ room.members.count }}</div>
-      <div class="poker-card-value-2">{{ room.members.count }}</div>
+      <div class="poker-card-value-1">{{ room.members_count }}</div>
+      <div class="poker-card-value-2">{{ room.members_count }}</div>
     </a>
     {% endfor %}
     <a class="poker-card-new" href="{% url 'poker:create'%}">
