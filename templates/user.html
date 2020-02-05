@@ -11,26 +11,31 @@
   {% include "messages.html" %}
   <form class="" action="{% url 'users:user' %}" method="post" autocomplete="off">
     {% csrf_token %}
-    <h1>Настройки пользователя</h1>
     <div class="pure-g">
       <div class="pure-u-1-1 pure-u-md-1-2">
+        <h1>Настройки</h1>
         <p>Имя</p>
         <input type="text" name="firstname" value="{{ request.user.first_name }}" class="text-input wide" placeholder="Ваше имя">
         <p>Фамилия</p>
         <input type="text" name="lastname" value="{{ request.user.last_name }}" class="text-input wide" placeholder="Ваша фамилия">
         <p>Email</p>
         <input type="text" name="email" value="{{ request.user.email }}" class="text-input wide" disabled>
-        <br>
-        <br>
-      </div>
-      <div class="pure-u-1-1 pure-u-md-1-2">
+        <br><br>
         <input type="submit" name="_save" value="Сохранить изменения" class="btn success">
         <br>
         <a href="{% url 'users:logout' %}" class="btn danger">Выйти из аккаунта</a>
         {% if request.user.is_superuser %}
-        <br><br>
+        <br>
         <a href="{% url 'admin:index' %}" class="btn">Администрирование сайта</a>
         {% endif %}
+      </div>
+      <div class="pure-u-1-1 pure-u-md-1-2">
+        <h1>Статистика</h1>
+        <p>Голос сделано: <b>{{ user.total_votes }} шт.</b></p>
+        <p>Суммарное значение голосов: <b>{{ user.total_voted_values }} ед.</b></p>
+        {% with user.favourite_vote as fav %}
+        <p>Любимое значение: <b>{{ fav.value }} ед.</b> (кол-во: <b>{{ fav.count }} шт.</b>)</p>
+        {% endwith %}
       </div>
     </div>
     <br><br>

@@ -1,6 +1,9 @@
-from django.contrib import admin
+from django.contrib import (
+    admin,
+    messages,
+)
 from django.utils.translation import ugettext_lazy as _
-from django.contrib import messages
+
 from . import models
 
 
