@@ -39,7 +39,9 @@ class User(AbstractUser):
     def total_votes(self):
         """Get total votes count."""
         try:
-            return PokerMemberVote.objects.filter(member__user=self).count()
+            return PokerMemberVote.objects.filter(
+                member__user=self
+            ).count() or '?'
         except Exception:
             return '?'
 
@@ -49,7 +51,7 @@ class User(AbstractUser):
         try:
             return PokerMemberVote.objects.filter(
                 member__user=self
-            ).aggregate(sum_votes=Sum('value'))['sum_votes']
+            ).aggregate(sum_votes=Sum('value'))['sum_votes'] or '?'
         except Exception:
             return '?'
 
