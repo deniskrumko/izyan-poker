@@ -1,7 +1,4 @@
-from core.views import (
-    BaseView,
-    LoginRequiredMixin,
-)
+from core.views import BaseView, LoginRequiredMixin
 
 from ..models import PokerRoom
 

@@ -1,14 +1,6 @@
-from core.views import (
-    BaseView,
-    LoginRequiredMixin,
-)
+from core.views import BaseView, LoginRequiredMixin
 
-from ..models import (
-    PokerMember,
-    PokerMemberVote,
-    PokerRoom,
-    PokerRound,
-)
+from ..models import PokerMember, PokerMemberVote, PokerRoom, PokerRound
 
 
 class RoomView(LoginRequiredMixin, BaseView):

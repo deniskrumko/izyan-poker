@@ -1,24 +1,14 @@
 import re
 
 from django.contrib import messages
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic.base import (
-    RedirectView,
-    TemplateView,
-)
+from django.views.generic.base import RedirectView, TemplateView
 
-from core.views import (
-    BaseView,
-    LoginRequiredMixin,
-)
+from core.views import BaseView, LoginRequiredMixin
 
 from .models import User
 

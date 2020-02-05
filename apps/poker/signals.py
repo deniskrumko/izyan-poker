@@ -1,14 +1,7 @@
-from django.db.models.signals import (
-    post_delete,
-    post_save,
-)
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
-from .models import (
-    PokerMember,
-    PokerMemberVote,
-    PokerRound,
-)
+from .models import PokerMember, PokerMemberVote, PokerRound
 
 
 @receiver((post_save, post_delete), sender=PokerMember)

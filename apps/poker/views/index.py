@@ -1,9 +1,6 @@
 from core.views import BaseView
 
-from ..models import (
-    PokerRoom,
-    PokerRound,
-)
+from ..models import PokerRoom, PokerRound
 
 
 class IndexView(BaseView):

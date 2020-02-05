@@ -1,11 +1,6 @@
 from django.conf.urls import url
 
-from .views import (
-    LoginView,
-    LogoutView,
-    SignUpView,
-    UserView,
-)
+from .views import LoginView, LogoutView, SignUpView, UserView
 
 app_name = 'apps.users'
 
