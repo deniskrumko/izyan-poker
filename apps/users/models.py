@@ -1,12 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import (
-    Count,
-    Sum,
-)
+from django.db.models import Count, Sum
 from django.utils.translation import ugettext_lazy as _
 
+from core.utils.math import round_up
+
 from apps.poker.models import PokerMemberVote
+
+from .ratings import MAX_USER_RATING, USER_RATINGS
 
 
 class User(AbstractUser):
@@ -65,3 +66,16 @@ class User(AbstractUser):
                 'value': '?',
                 'count': '?',
             }
+
+    @property
+    def rating(self):
+        """Get user rating."""
+        total = self.total_voted_values
+        if not isinstance(total, int):
+            return '?'
+
+        if total >= MAX_USER_RATING:
+            # Limit max rating
+            total = MAX_USER_RATING
+
+        return USER_RATINGS.get(round_up(total), 'Не удалось определить')

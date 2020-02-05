@@ -31,6 +31,7 @@
       </div>
       <div class="pure-u-1-1 pure-u-md-1-2">
         <h1>Статистика</h1>
+        <p>Звание: <b>{{ user.rating }}</b></p>
         <p>Голос сделано: <b>{{ user.total_votes }} шт.</b></p>
         <p>Суммарное значение голосов: <b>{{ user.total_voted_values }} ед.</b></p>
         {% with user.favourite_vote as fav %}
