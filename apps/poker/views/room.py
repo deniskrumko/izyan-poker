@@ -29,7 +29,7 @@ class RoomView(LoginRequiredMixin, BaseView):
             # Deactivate member
             PokerMember.objects.filter(id=delete).update(is_active=False)
 
-        if revote:
+        if revote and not self.poker_round.completed:
             # Re-vote
             PokerMemberVote.objects.filter(
                 poker_round=self.poker_round,

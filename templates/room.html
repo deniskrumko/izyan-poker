@@ -150,6 +150,7 @@
 
 var secret_vote = '';
 var need_to_check_status = true;
+var counter = 0;
 
 function show_rename() {
   need_to_check_status = false;
@@ -182,6 +183,15 @@ function secretVote(e) {
 function update_room_status() {
   var xmlhttp = new XMLHttpRequest();
   var url = "{% url 'poker:status' room.token %}";
+  counter += 1;
+
+  if (counter == 360) {
+    // TODO: Replace with button inside window
+    // If user is inactive for more than 30 minutes - show alert
+    alert('Izyan poker: room "{{ room }}" is inactive for 30 minutes');
+    window.location = window.location.href;
+    return
+  }
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -202,6 +212,6 @@ function update_room_status() {
   xmlhttp.send();
 }
 
-setInterval(update_room_status, 4000);
+setInterval(update_room_status, 5000);
 </script>
 {% endblock %}
